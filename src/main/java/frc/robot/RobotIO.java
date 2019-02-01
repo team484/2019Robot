@@ -10,6 +10,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -23,6 +24,8 @@ public class RobotIO {
     public static CANSparkMax rightMotor1;
     public static CANSparkMax rightMotor2;
     public static CANSparkMax rightMotor3;
+    public static DoubleSolenoid topSolenoid;
+    public static DoubleSolenoid bottomSolenoid;
 
     public static DifferentialDrive diffDrive;
 
@@ -34,6 +37,8 @@ public class RobotIO {
         rightMotor1 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_1_ID, MotorType.kBrushless);
         rightMotor2 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_2_ID, MotorType.kBrushless);
         rightMotor3 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_3_ID, MotorType.kBrushless);
+        topSolenoid = new DoubleSolenoid(RobotSettings.TOP_SOLENOID_PORT_1, RobotSettings.TOP_SOLENOID_PORT_2);
+        bottomSolenoid = new DoubleSolenoid(RobotSettings.BOTTOM_SOLENOID_PORT_1, RobotSettings.BOTTOM_SOLENOID_PORT_2);
     
         leftMotor2.follow(leftMotor1);
         leftMotor3.follow(leftMotor1);

@@ -7,7 +7,10 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotIO;
 
 /**
  * Add your docs here.
@@ -21,4 +24,18 @@ public class HatchSub extends Subsystem {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
+
+  public static void setTop(Value v) {
+
+    RobotIO.topSolenoid.set(v);
+
+  }
+
+  public static void setBottom(Value v) {
+
+    RobotIO.bottomSolenoid.set(v);
+
+  }
+
+
 }

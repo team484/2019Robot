@@ -19,4 +19,9 @@ public class RobotSettings {
     public static final int RIGHT_MOTOR_3_ID = 6;
 
     public static final int DRIVER_STICK_PORT = 0;
+
+    public static final int TOP_SOLENOID_PORT_1 = 0;
+    public static final int TOP_SOLENOID_PORT_2 = 1;
+    public static final int BOTTOM_SOLENOID_PORT_1 = 2;
+    public static final int BOTTOM_SOLENOID_PORT_2 = 3;
 }
