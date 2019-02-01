@@ -24,4 +24,9 @@ public class RobotSettings {
     public static final int TOP_SOLENOID_PORT_2 = 1;
     public static final int BOTTOM_SOLENOID_PORT_1 = 2;
     public static final int BOTTOM_SOLENOID_PORT_2 = 3;
+
+    public static final int WHEEL_CONTROLLER_ID = 0;
+    public static final int ARM_SOLENOID_PORT_1 = 4;
+    public static final int ARM_SOLENOID_PORT_2 = 5;
+    public static final double WHEEL_CONTROLLER_SPEED = 0;
 }

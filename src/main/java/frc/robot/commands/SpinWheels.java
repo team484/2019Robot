@@ -7,20 +7,19 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.subsystems.HatchSub;
+import frc.robot.RobotSettings;
+import frc.robot.subsystems.IntakeSub;
 
-public class RetractHatch extends Command {
-  public RetractHatch() {
+public class SpinWheels extends Command {
+  public SpinWheels() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
 
-    requires(Robot.hatchSub);
+    requires(Robot.intakeSub);
 
   }
-
 
   // Called just before this Command runs the first time
   @Override
@@ -31,14 +30,14 @@ public class RetractHatch extends Command {
   @Override
   protected void execute() {
 
-    HatchSub.setTop(Value.kReverse);
+    IntakeSub.setController(RobotSettings.WHEEL_CONTROLLER_SPEED);
 
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return true;
+    return false;
   }
 
   // Called once after isFinished returns true

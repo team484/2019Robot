@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -24,8 +25,13 @@ public class RobotIO {
     public static CANSparkMax rightMotor1;
     public static CANSparkMax rightMotor2;
     public static CANSparkMax rightMotor3;
+
     public static DoubleSolenoid topSolenoid;
     public static DoubleSolenoid bottomSolenoid;
+
+    public static WPI_TalonSRX wheelController;
+    public static DoubleSolenoid armSolenoid;
+
 
     public static DifferentialDrive diffDrive;
 
@@ -37,9 +43,14 @@ public class RobotIO {
         rightMotor1 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_1_ID, MotorType.kBrushless);
         rightMotor2 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_2_ID, MotorType.kBrushless);
         rightMotor3 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_3_ID, MotorType.kBrushless);
+        
         topSolenoid = new DoubleSolenoid(RobotSettings.TOP_SOLENOID_PORT_1, RobotSettings.TOP_SOLENOID_PORT_2);
         bottomSolenoid = new DoubleSolenoid(RobotSettings.BOTTOM_SOLENOID_PORT_1, RobotSettings.BOTTOM_SOLENOID_PORT_2);
     
+        wheelController = new WPI_TalonSRX(RobotSettings.WHEEL_CONTROLLER_ID);
+        armSolenoid = new DoubleSolenoid(RobotSettings.ARM_SOLENOID_PORT_1, RobotSettings.ARM_SOLENOID_PORT_2);
+
+
         leftMotor2.follow(leftMotor1);
         leftMotor3.follow(leftMotor1);
         rightMotor2.follow(rightMotor1);
