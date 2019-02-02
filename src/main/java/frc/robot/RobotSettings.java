@@ -39,4 +39,7 @@ public class RobotSettings {
     public static final int ELEVATOR_SPEED_MULTIPLYER = 1;
 
     public static final double CARGO_SHOOT_SPEED = 0.5;
+    public static final double ELEVATOR_UP_KP = 0;
+    public static final double ELEVATOR_UP_KI = 0;
+    public static final double ELEVATOR_UP_KD = 0;
 }

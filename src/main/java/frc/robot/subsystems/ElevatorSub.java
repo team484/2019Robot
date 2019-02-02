@@ -31,4 +31,16 @@ public class ElevatorSub extends Subsystem {
     RobotIO.elevatorMotorLeft.set(speed*RobotSettings.ELEVATOR_SPEED_MULTIPLYER);
     RobotIO.elevatorMotorRight.set(-speed*RobotSettings.ELEVATOR_SPEED_MULTIPLYER);
   }
+
+  public static double getElevatorHeight() {
+    return 0;
+  }
+
+  public static boolean isUp() {
+    return true;
+  }
+
+  public static double getElevatorRate() {
+    return 0;
+  }
 }
