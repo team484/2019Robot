@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -28,11 +29,14 @@ public class RobotIO {
     public static CANSparkMax elevatorMotorLeft;
     public static CANSparkMax elevatorMotorRight;
 
+    
+    public static WPI_TalonSRX cargoController;
     public static DoubleSolenoid topSolenoid;
     public static DoubleSolenoid bottomSolenoid;
 
     public static WPI_TalonSRX wheelController;
     public static DoubleSolenoid armSolenoid;
+    public static AnalogInput cargoIrFinder;
 
 
     public static DifferentialDrive diffDrive;
@@ -47,6 +51,15 @@ public class RobotIO {
         rightMotor2 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_2_ID, MotorType.kBrushless);
         rightMotor3 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_3_ID, MotorType.kBrushless);
         
+        
+        
+        
+        
+        
+        
+        
+        cargoIrFinder = new AnalogInput(RobotSettings.IR_RANGE_FINDER);
+        cargoController = new WPI_TalonSRX(RobotSettings.CARGO_CONTROLLER_ID);
         topSolenoid = new DoubleSolenoid(RobotSettings.TOP_SOLENOID_PORT_1, RobotSettings.TOP_SOLENOID_PORT_2);
         bottomSolenoid = new DoubleSolenoid(RobotSettings.BOTTOM_SOLENOID_PORT_1, RobotSettings.BOTTOM_SOLENOID_PORT_2);
         elevatorMotorLeft = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_LEFT, MotorType.kBrushless);

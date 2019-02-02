@@ -19,6 +19,10 @@ public class RobotSettings {
     public static final int RIGHT_MOTOR_3_ID = 6;
     public static final int ELEVATOR_MOTOR_LEFT = 7;
     public static final int ELEVATOR_MOTOR_RIGHT = 8;
+    public static final int CARGO_CONTROLLER_ID = 7;
+    public static final int IR_RANGE_FINDER = 0;
+    public static final int IR_RANGE_FINDER_VOLTAGE = 0;
+    
 
     public static final int DRIVER_STICK_PORT = 0;
 
@@ -33,4 +37,6 @@ public class RobotSettings {
     public static final double WHEEL_CONTROLLER_SPEED = 0;
     public static final int OPERATOR_STICK_PORT = 9;
     public static final int ELEVATOR_SPEED_MULTIPLYER = 1;
+
+    public static final double CARGO_SHOOT_SPEED = 0.5;
 }

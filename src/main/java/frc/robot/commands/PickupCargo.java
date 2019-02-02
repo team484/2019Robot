@@ -17,6 +17,7 @@ public class PickupCargo extends CommandGroup {
 
     addParallel(new LowerIntake());
     addSequential(new SpinWheels());
+    
 
   }
   
