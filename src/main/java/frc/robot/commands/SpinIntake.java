@@ -12,8 +12,8 @@ import frc.robot.Robot;
 import frc.robot.RobotSettings;
 import frc.robot.subsystems.IntakeSub;
 
-public class SpinWheels extends Command {
-  public SpinWheels() {
+public class SpinIntake extends Command {
+  public SpinIntake() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
 
@@ -30,7 +30,7 @@ public class SpinWheels extends Command {
   @Override
   protected void execute() {
 
-    IntakeSub.setController(RobotSettings.WHEEL_CONTROLLER_SPEED);
+    IntakeSub.setSpeed(RobotSettings.INTAKE_MOTOR_SPEED);
 
   }
 
@@ -43,11 +43,13 @@ public class SpinWheels extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    IntakeSub.setSpeed(0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }

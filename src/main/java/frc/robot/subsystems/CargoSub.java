@@ -25,6 +25,6 @@ public class CargoSub extends Subsystem {
   }
 
   public static void set(double speed) {
-    RobotIO.cargoController.set(speed);
+    RobotIO.cargoMotor.set(speed);
   }
 }

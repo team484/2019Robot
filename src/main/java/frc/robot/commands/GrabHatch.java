@@ -31,7 +31,7 @@ public class GrabHatch extends Command {
   @Override
   protected void execute() {
 
-    HatchSub.setBottom(Value.kForward);
+    HatchSub.setBottom(Value.kReverse);
 
   }
 

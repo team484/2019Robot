@@ -8,12 +8,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
 import frc.robot.subsystems.CargoSub;
 
 public class CargoDoNothing extends Command {
   public CargoDoNothing() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+    requires(Robot.cargoSub);
   }
 
   // Called just before this Command runs the first time

@@ -13,8 +13,7 @@ import frc.robot.RobotSettings;
 
 public class WaitForCargo extends Command {
   public WaitForCargo() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+
   }
 
   // Called just before this Command runs the first time
@@ -31,7 +30,7 @@ public class WaitForCargo extends Command {
   @Override
   protected boolean isFinished() {
   
-    return (RobotIO.cargoIrFinder.getAverageVoltage()>RobotSettings.IR_RANGE_FINDER_VOLTAGE );
+    return (RobotIO.cargoSensor.getAverageVoltage()>RobotSettings.CARGO_SENSOR_VOLTAGE );
   }
 
   // Called once after isFinished returns true

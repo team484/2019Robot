@@ -25,15 +25,15 @@ public class IntakeSub extends Subsystem {
     // setDefaultCommand(new MySpecialCommand());
   }
 
-  public static void setController(double speed) {
+  public static void setSpeed(double speed) {
 
-    RobotIO.wheelController.set(speed);
+    RobotIO.intakeMotor.set(speed);
 
   }
 
   public static void setArm(Value v) {
 
-    RobotIO.armSolenoid.set(v);
+    RobotIO.intakeSolenoid.set(v);
 
   }
 

@@ -18,8 +18,7 @@ import frc.robot.subsystems.ElevatorSub;
 
 public class ElevateToHeight extends Command {
   public ElevateToHeight() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+    requires(Robot.elevatorSub);
   }
 
   private static PIDController pid = new PIDController(RobotSettings.ELEVATOR_UP_KP, RobotSettings.ELEVATOR_UP_KI,
@@ -31,8 +30,8 @@ public class ElevateToHeight extends Command {
 
         @Override
         public double pidGet() {
-          System.out.println(ElevatorSub.getElevatorHeight());
-          return ElevatorSub.getElevatorHeight();
+          System.out.println(ElevatorSub.getHeight());
+          return ElevatorSub.getHeight();
         }
 
         @Override
@@ -66,8 +65,8 @@ public class ElevateToHeight extends Command {
   }
 
   protected boolean isFinished() {
-    return ElevatorSub.getElevatorHeight() > setpoint || ElevatorSub.isUp()
-        || (ElevatorSub.getElevatorHeight() > 0.9 && ElevatorSub.getElevatorRate() == 0);
+    return ElevatorSub.getHeight() > setpoint || ElevatorSub.isUp()
+        || (ElevatorSub.getHeight() > 0.9 && ElevatorSub.getRate() == 0);
   }
 
   protected void end() {

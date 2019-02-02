@@ -31,7 +31,7 @@ public class ReleaseHatch extends Command {
   @Override
   protected void execute() {
 
-    HatchSub.setBottom(Value.kReverse);
+    HatchSub.setBottom(Value.kForward);
 
   }
 

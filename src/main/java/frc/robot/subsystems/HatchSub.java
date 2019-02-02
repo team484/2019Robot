@@ -26,13 +26,13 @@ public class HatchSub extends Subsystem {
 
   public static void setTop(Value v) {
 
-    RobotIO.topSolenoid.set(v);
+    RobotIO.topHatchSolenoid.set(v);
 
   }
 
   public static void setBottom(Value v) {
 
-    RobotIO.bottomSolenoid.set(v);
+    RobotIO.bottomHatchSolenoid.set(v);
 
   }
 

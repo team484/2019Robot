@@ -10,13 +10,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class PickupCargo extends CommandGroup {
-  /**
-   * Add your docs here.
-   */
+
   public PickupCargo() {
 
     addParallel(new LowerIntake());
-    addSequential(new SpinWheels());
+    addSequential(new SpinIntake());
     
 
   }
