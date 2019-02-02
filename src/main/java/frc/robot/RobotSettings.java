@@ -41,6 +41,7 @@ public class RobotSettings {
 
     /*-----Cargo Vars-----*/
     public static final double CARGO_SHOOT_SPEED = 0.5;
+    public static final double CARGO_SHOOT_SPEED_COUNTER = 0.02;
     public static final double CARGO_SENSOR_VOLTAGE = 2.0;
 
     /*-----Drive Vars-----*/

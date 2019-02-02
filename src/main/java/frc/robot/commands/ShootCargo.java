@@ -13,6 +13,7 @@ import frc.robot.RobotSettings;
 import frc.robot.subsystems.CargoSub;
 
 public class ShootCargo extends Command {
+  private int count;
   public ShootCargo() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.cargoSub);
@@ -21,12 +22,17 @@ public class ShootCargo extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    count = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    CargoSub.set(RobotSettings.CARGO_SHOOT_SPEED);
+    count += RobotSettings.CARGO_SHOOT_SPEED_COUNTER;
+    if (count < RobotSettings.CARGO_SHOOT_SPEED)
+      CargoSub.set(count);
+    else
+      CargoSub.set(RobotSettings.CARGO_SHOOT_SPEED);
   }
 
   // Make this return true when this Command no longer needs to run execute()
