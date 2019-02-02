@@ -25,6 +25,8 @@ public class RobotIO {
     public static CANSparkMax rightMotor1;
     public static CANSparkMax rightMotor2;
     public static CANSparkMax rightMotor3;
+    public static CANSparkMax elevatorMotorLeft;
+    public static CANSparkMax elevatorMotorRight;
 
     public static DoubleSolenoid topSolenoid;
     public static DoubleSolenoid bottomSolenoid;
@@ -36,6 +38,7 @@ public class RobotIO {
     public static DifferentialDrive diffDrive;
 
     public static Joystick driverStick;
+    public static Joystick operatorStick;
     public RobotIO() {
         leftMotor1 = new CANSparkMax(RobotSettings.LEFT_MOTOR_1_ID, MotorType.kBrushless);
         leftMotor2 = new CANSparkMax(RobotSettings.LEFT_MOTOR_2_ID, MotorType.kBrushless);
@@ -46,6 +49,8 @@ public class RobotIO {
         
         topSolenoid = new DoubleSolenoid(RobotSettings.TOP_SOLENOID_PORT_1, RobotSettings.TOP_SOLENOID_PORT_2);
         bottomSolenoid = new DoubleSolenoid(RobotSettings.BOTTOM_SOLENOID_PORT_1, RobotSettings.BOTTOM_SOLENOID_PORT_2);
+        elevatorMotorLeft = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_LEFT, MotorType.kBrushless);
+        elevatorMotorRight = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_RIGHT, MotorType.kBrushless);
     
         wheelController = new WPI_TalonSRX(RobotSettings.WHEEL_CONTROLLER_ID);
         armSolenoid = new DoubleSolenoid(RobotSettings.ARM_SOLENOID_PORT_1, RobotSettings.ARM_SOLENOID_PORT_2);
@@ -59,5 +64,6 @@ public class RobotIO {
         diffDrive = new DifferentialDrive(leftMotor1, rightMotor1);
 
         driverStick = new Joystick(RobotSettings.DRIVER_STICK_PORT);
+        operatorStick = new Joystick(RobotSettings.OPERATOR_STICK_PORT);
     }
 }
