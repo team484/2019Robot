@@ -90,5 +90,18 @@ public class DriveSub extends Subsystem {
     double[] ypr = new double[3];
     RobotIO.imu.getYawPitchRoll(ypr);
     return ypr[0];
+
+  
+  }
+
+  public static double pidOut1, pidOut2;
+  public static void doublePIDDrive() {
+		set(pidOut1, pidOut2);
+  }
+  
+  public static double getRate() {
+    double leftRate = RobotIO.leftMotor1.getEncoder().getVelocity() * RobotSettings.DRIVE_MOTOR_ENC_DPP;
+    double rightRate = -RobotIO.rightMotor1.getEncoder().getVelocity() * RobotSettings.DRIVE_MOTOR_ENC_DPP;
+    return (leftRate > rightRate) ? leftRate : rightRate;
   }
 }

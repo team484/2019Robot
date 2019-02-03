@@ -67,6 +67,22 @@ public class RobotSettings {
 	public static final double WHEEL_DIAMETER = 4.0 * 0.0254; //Wheel diameter (in) * m/in
     public static final double VOLTAGE_TARGET = 8.3;
 
+    public static final double ROTATE_ANGLE_KP = 0.06;
+	public static final double ROTATE_ANGLE_KI = 0;
+	public static final double ROTATE_ANGLE_KD = 0.6;
+    public static final double ROTATE_PID_UPDATE_RATE = 0.01;
+    public static final double ROTATE_PID_TOLERANCE = 0;
+    
+    public static final double DRIVE_PID_UPDATE_RATE = 0.01;
+    public static final double MAINTAIN_ANGLE_KP = 0.05;
+	public static final double MAINTAIN_ANGLE_KI = 0.001;
+	public static final double MAINTAIN_ANGLE_KD = 0.0;
+	public static final double DRIVE_PID_TOLERANCE = 8;
+    public static final double DRIVE_PID_RATE_TOLERANCE = 0.5;
+    public static final double DRIVE_DISTANCE_KP = 0.05;
+	public static final double DRIVE_DISTANCE_KI = 0;
+	public static final double DRIVE_DISTANCE_KD = 0.75;
+
     // The first argument is the proportional gain. Usually this will be quite high
 	// The second argument is the integral gain. This is unused for motion profiling
 	// The third argument is the derivative gain. Tweak this if unhappy with the tracking of the trajectory
