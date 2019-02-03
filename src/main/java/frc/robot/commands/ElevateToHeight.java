@@ -55,6 +55,11 @@ public class ElevateToHeight extends Command {
   protected void initialize() {
     if (pid == null)
       return;
+    if (setpoint > ElevatorSub.getHeight()) {
+      pid.setPID(RobotSettings.ELEVATOR_UP_KP, RobotSettings.ELEVATOR_UP_KI, RobotSettings.ELEVATOR_UP_KD);
+    } else {
+      pid.setPID(RobotSettings.ELEVATOR_DOWN_KP, RobotSettings.ELEVATOR_DOWN_KI, RobotSettings.ELEVATOR_DOWN_KD);
+    }
     pid.setSetpoint(setpoint);
     pid.setOutputRange(0.0, 1.0);
     pid.enable();

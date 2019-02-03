@@ -32,15 +32,32 @@ public class ElevatorSub extends Subsystem {
     RobotIO.elevatorMotorRight.set(-speed*RobotSettings.ELEVATOR_SPEED_MULTIPLYER);
   }
 
+  private static double lastHeight = 0;
   public static double getHeight() {
-    return 0;
+    double left = RobotIO.elevatorMotorLeft.getEncoder().getPosition() * RobotSettings.ELEVATOR_ENCODER_DPP;
+    double right = -RobotIO.elevatorMotorRight.getEncoder().getPosition() * RobotSettings.ELEVATOR_ENCODER_DPP;
+    if (left == 0 && right == 0) {
+      return lastHeight;
+    }
+    if (left == 0) {
+      lastHeight = right;
+      return right;
+    }
+    if (right == 0) {
+      lastHeight = left;
+      return left;
+    }
+    lastHeight = (left+right)/2.0;
+    return lastHeight;
   }
 
   public static boolean isUp() {
-    return false;
+    return getHeight() > RobotSettings.ELEVATOR_UP_THRESHOLD;
   }
 
   public static double getRate() {
-    return 0;
+    double leftRate = RobotIO.elevatorMotorLeft.getEncoder().getVelocity() * RobotSettings.ELEVATOR_ENCODER_DPP;
+    double rightRate = -RobotIO.elevatorMotorRight.getEncoder().getVelocity() * RobotSettings.ELEVATOR_ENCODER_DPP;
+    return (leftRate > rightRate) ? leftRate : rightRate;
   }
 }

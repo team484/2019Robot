@@ -28,7 +28,7 @@ public class ShootCargo extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    count += RobotSettings.CARGO_SHOOT_SPEED_COUNTER;
+    count += RobotSettings.CARGO_RAMP_RATE;
     if (count < RobotSettings.CARGO_SHOOT_SPEED)
       CargoSub.set(count);
     else

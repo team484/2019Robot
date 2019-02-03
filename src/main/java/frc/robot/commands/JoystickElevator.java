@@ -26,7 +26,7 @@ public class JoystickElevator extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ElevatorSub.set(-RobotIO.operatorStick.getY());
+    ElevatorSub.set(RobotIO.operatorStick.getY());
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -8,12 +8,16 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -33,6 +37,8 @@ public class RobotIO {
     public static CANSparkMax rightMotor2;
     public static CANSparkMax rightMotor3;
     public static DifferentialDrive diffDrive;
+    public static Encoder leftEncoder;
+    public static Encoder rightEncoder;
 
     /*-----Elevator-----*/
     public static CANSparkMax elevatorMotorLeft;
@@ -49,6 +55,9 @@ public class RobotIO {
     /*-----Misc-----*/
     public static Joystick driverStick;
     public static Joystick operatorStick;
+    public static PigeonIMU imu;
+    public static Compressor compressor;
+    public static PowerDistributionPanel pdp;
 
     public RobotIO() {
         /*-----Cargo-----*/
@@ -68,8 +77,20 @@ public class RobotIO {
         rightMotor2.follow(rightMotor1);
         rightMotor3.follow(rightMotor1);
 
+        leftMotor1.setInverted(RobotSettings.INVERT_DRIVE);
+        leftMotor2.setInverted(RobotSettings.INVERT_DRIVE);
+        leftMotor3.setInverted(RobotSettings.INVERT_DRIVE);
+        rightMotor1.setInverted(RobotSettings.INVERT_DRIVE);
+        rightMotor2.setInverted(RobotSettings.INVERT_DRIVE);
+        rightMotor3.setInverted(RobotSettings.INVERT_DRIVE);
+
         diffDrive = new DifferentialDrive(leftMotor1, rightMotor1);
+
+        leftEncoder = new Encoder(RobotSettings.LEFT_ENCODER_A_PORT, RobotSettings.LEFT_ENCODER_B_PORT);
+        rightEncoder = new Encoder(RobotSettings.RIGHT_ENCODER_A_PORT, RobotSettings.RIGHT_ENCODER_B_PORT);
         
+        leftEncoder.setDistancePerPulse(RobotSettings.DRIVE_ENCODER_DPP);
+        rightEncoder.setDistancePerPulse(-RobotSettings.DRIVE_ENCODER_DPP);
         /*-----Elevator-----*/
         elevatorMotorLeft = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_LEFT_ID, MotorType.kBrushless);
         elevatorMotorRight = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_RIGHT_ID, MotorType.kBrushless);
@@ -85,5 +106,8 @@ public class RobotIO {
         /*-----Misc-----*/
         driverStick = new Joystick(RobotSettings.DRIVER_STICK_PORT);
         operatorStick = new Joystick(RobotSettings.OPERATOR_STICK_PORT);
+        imu = new PigeonIMU(cargoMotor);
+        compressor = new Compressor();
+        pdp = new PowerDistributionPanel();
     }
 }
