@@ -1,3 +1,22 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -14,6 +33,30 @@ public class LoadCargo extends CommandGroup {
   public LoadCargo() {
     addParallel(new ShootCargo());
     addSequential(new WaitForCargo());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     addSequential(new CargoDoNothing());
   }
 }
