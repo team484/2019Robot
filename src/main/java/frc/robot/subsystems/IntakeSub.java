@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotIO;
+import frc.robot.commands.IntakeDoNothing;
 
 /**
  * Add your docs here.
@@ -22,11 +23,11 @@ public class IntakeSub extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new IntakeDoNothing());
   }
 
   public static void setSpeed(double speed) {
-
+    if (RobotIO.intakeMotor == null) return;
     RobotIO.intakeMotor.set(speed);
 
   }

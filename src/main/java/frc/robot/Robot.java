@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    SmartDashboard.putData(RobotIO.pdp);
     oi = new OI();
     oi.setupOI();
     enableCameraServer();
@@ -82,6 +83,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("DriveTrain Left Enc", RobotIO.leftEncoder.getDistance());
+    SmartDashboard.putNumber("DriveTrain Right Enc", RobotIO.rightEncoder.getDistance());
+    SmartDashboard.putNumber("Elevator Height", ElevatorSub.getHeight());
+
   }
 
   /**

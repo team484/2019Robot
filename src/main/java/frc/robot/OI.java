@@ -29,16 +29,17 @@ public class OI {
 
   public void setupOI() {
     
-    pickupCargo = new JoystickButton(RobotIO.operatorStick, 0);
-    shootCargo = new JoystickButton(RobotIO.operatorStick, 0);
-    extendHatch = new JoystickButton(RobotIO.operatorStick, 0);
-    grabHatch = new JoystickButton(RobotIO.operatorStick, 0);
-    raiseIntake = new JoystickButton(RobotIO.operatorStick, 0);
-    releaseHatch = new JoystickButton(RobotIO.operatorStick, 0);
-    retractHatch = new JoystickButton(RobotIO.operatorStick, 0);
+    pickupCargo = new JoystickButton(RobotIO.operatorStick, 2);
+    shootCargo = new JoystickButton(RobotIO.operatorStick, 1);
+    extendHatch = new JoystickButton(RobotIO.operatorStick, 3);
+    grabHatch = new JoystickButton(RobotIO.operatorStick, 5);
+    raiseIntake = new JoystickButton(RobotIO.operatorStick, 7);
+    releaseHatch = new JoystickButton(RobotIO.operatorStick, 6);
+    retractHatch = new JoystickButton(RobotIO.operatorStick, 4);
 
     pickupCargo.whenPressed(new PickupCargo());
-    shootCargo.whenPressed(new ShootCargo());
+    pickupCargo.whenReleased(new IntakeDoNothing());
+    shootCargo.whileHeld(new ShootCargo());
     extendHatch.whenPressed(new ExtendHatch());
     grabHatch.whenPressed(new GrabHatch());
     raiseIntake.whenPressed(new RaiseIntake());

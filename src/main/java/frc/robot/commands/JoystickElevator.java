@@ -7,12 +7,49 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotIO;
 import frc.robot.subsystems.ElevatorSub;
 
 public class JoystickElevator extends Command {
+  PIDSource pidSource = new PIDSource() {
+
+    @Override
+    public void setPIDSourceType(PIDSourceType pidSource) {
+
+    }
+
+    @Override
+    public double pidGet() {
+      return ElevatorSub.getHeight();
+    }
+
+    @Override
+    public PIDSourceType getPIDSourceType() {
+      return PIDSourceType.kDisplacement;
+    }
+  };
+
+  PIDOutput pidOutput = new PIDOutput() {
+
+    @Override
+    public void pidWrite(double output) {
+      ElevatorSub.set(output);
+    }
+  };
+
+  PIDController pid = new PIDController(0.1, 0.0, 0.0, pidSource, pidOutput, 0.1);
+
+  private int commandState = 0; // 0 = JoystickCtrl 1 = No Joystick, but not stationary 2 = Stationary/PID
+                                // control
+  private double lastRate = 0;
+
   public JoystickElevator() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.elevatorSub);
@@ -21,12 +58,59 @@ public class JoystickElevator extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    commandState = 0;
+    lastRate = ElevatorSub.getRate();
+    pid.setOutputRange(-2.0, 2.0);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ElevatorSub.set(RobotIO.operatorStick.getY());
+    SmartDashboard.putNumber("ElevState", commandState);
+    double newRate = ElevatorSub.getRate();
+    double operatorInput = RobotIO.operatorStick.getY();
+    if (Math.abs(operatorInput) > 0.06) {
+      commandState = 0;
+      pid.disable();
+    }
+
+    switch (commandState) {
+    case 0:
+      ElevatorSub.set(operatorInput * 8.0);
+      if (Math.abs(operatorInput) < 0.06) {
+        commandState = 1;
+      }
+      break;
+
+    case 1:
+      if (newRate == 0) {
+        pid.setSetpoint(ElevatorSub.getHeight());
+        pid.reset();
+        pid.enable();
+        commandState = 2;
+        break;
+      }
+      if (newRate >= 0 && lastRate <= 0) {
+        pid.setSetpoint(ElevatorSub.getHeight());
+        pid.reset();
+        pid.enable();
+        commandState = 2;
+        break;
+      }
+      if (newRate <= 0 && lastRate >= 0) {
+        pid.setSetpoint(ElevatorSub.getHeight());
+        pid.reset();
+        pid.enable();
+        commandState = 2;
+        break;
+      }
+    case 2:
+      //PID Loop running
+    default:
+      break;
+    }
+    lastRate = newRate;
+
   }
 
   // Make this return true when this Command no longer needs to run execute()

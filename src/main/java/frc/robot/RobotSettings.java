@@ -36,7 +36,7 @@ public class RobotSettings {
     
     /*-----Joystick Ports-----*/
     public static final int DRIVER_STICK_PORT = 0;
-    public static final int OPERATOR_STICK_PORT = 9;
+    public static final int OPERATOR_STICK_PORT = 1;
 
     /*-----PCM Ports-----*/
     public static final int TOP_SOLENOID_PORT_1 = 0;
@@ -47,8 +47,7 @@ public class RobotSettings {
     public static final int ARM_SOLENOID_PORT_2 = 5;
 
     /*-----Cargo Vars-----*/
-    public static final double CARGO_SHOOT_SPEED = 0.5;
-    public static final double CARGO_RAMP_RATE = 0.02; //increase per 1s/50
+    public static final double CARGO_SHOOT_SPEED = 0.8;
     public static final double CARGO_SENSOR_VOLTAGE = 2.0;
 
     /*-----Drive Vars-----*/
@@ -96,7 +95,7 @@ public class RobotSettings {
 	public static final double ACCELERATION_GAIN = 0.0;
 
     /*-----Elevator Vars-----*/
-    public static final double ELEVATOR_ENCODER_DPP = 0.5500928736;
+    public static final double ELEVATOR_ENCODER_DPP = 0.5500928736 * 2.0;
     public static final double ELEVATOR_DOWN_THRESHOLD = 1;
     public static final double ELEVATOR_UP_THRESHOLD = 63;
     public static final double ELEVATOR_SPEED_MULTIPLYER = 1.0;
@@ -106,7 +105,7 @@ public class RobotSettings {
     public static final double ELEVATOR_DOWN_KP = 0.1;
     public static final double ELEVATOR_DOWN_KI = 0;
     public static final double ELEVATOR_DOWN_KD = 0;
-    public static final double ELEVATOR_GRAVITY_COMP = 0.1;
+    public static final double ELEVATOR_GRAVITY_COMP = 0.5; //volts
 
     /*-----Hatch Vars-----*/
 

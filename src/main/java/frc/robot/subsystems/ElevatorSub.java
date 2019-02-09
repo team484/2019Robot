@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.ControlType;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
@@ -28,8 +30,8 @@ public class ElevatorSub extends Subsystem {
   }
 
   public static void set(double speed) {
-    RobotIO.elevatorMotorLeft.set(speed*RobotSettings.ELEVATOR_SPEED_MULTIPLYER);
-    RobotIO.elevatorMotorRight.set(-speed*RobotSettings.ELEVATOR_SPEED_MULTIPLYER);
+    RobotIO.elevatorMotorLeft.getPIDController().setReference((speed*RobotSettings.ELEVATOR_SPEED_MULTIPLYER + RobotSettings.ELEVATOR_GRAVITY_COMP), ControlType.kVoltage);
+    RobotIO.elevatorMotorRight.getPIDController().setReference((-speed*RobotSettings.ELEVATOR_SPEED_MULTIPLYER - RobotSettings.ELEVATOR_GRAVITY_COMP), ControlType.kVoltage);
   }
 
   private static double lastHeight = 0;
