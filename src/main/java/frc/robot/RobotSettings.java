@@ -23,6 +23,8 @@ public class RobotSettings {
     public static final int ELEVATOR_MOTOR_RIGHT_ID = 8;
     public static final int INTAKE_MOTOR_ID = 9;
     public static final int CARGO_MOTOR_ID = 10;
+    public static final int CLIMBER_MOTOR_LEFT = 11;
+    public static final int CLIMBER_MOTOR_RIGHT = 12;
 
     /*-----Analog Ports-----*/
     public static final int CARGO_SENSOR_PORT = 0;
@@ -39,12 +41,15 @@ public class RobotSettings {
     public static final int OPERATOR_STICK_PORT = 1;
 
     /*-----PCM Ports-----*/
-    public static final int TOP_SOLENOID_PORT_1 = 0;
-    public static final int TOP_SOLENOID_PORT_2 = 1;
-    public static final int BOTTOM_SOLENOID_PORT_1 = 2;
-    public static final int BOTTOM_SOLENOID_PORT_2 = 3;
-    public static final int ARM_SOLENOID_PORT_1 = 4;
-    public static final int ARM_SOLENOID_PORT_2 = 5;
+    public static final int TOP_SOLENOID_PORT_1 = 2;
+    public static final int TOP_SOLENOID_PORT_2 = 3;
+    public static final int BOTTOM_SOLENOID_PORT_1 = 1;
+    public static final int BOTTOM_SOLENOID_PORT_2 = 0;
+
+    public static final int ARM_SOLENOID_PORT_1 = 0;
+    public static final int ARM_SOLENOID_PORT_2 = 1;
+    public static final int CLIMBER_SOLENOID_PORT_1 = 2;
+    public static final int CLIMBER_SOLENOID_PORT_2 = 3;
 
     /*-----Cargo Vars-----*/
     public static final double CARGO_SHOOT_SPEED = 0.8;
@@ -116,4 +121,7 @@ public class RobotSettings {
     public static final int DRIVER_CAM_ID = 0;
     public static final int VISION_CAM_ID = 1;
     public static final double RADIANS_PER_PIXEL = 0.00736;
+
+    /*-----Climber Constants-----*/
+    public static final double speed = 0.5;
 }

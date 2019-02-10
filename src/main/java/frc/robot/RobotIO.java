@@ -61,6 +61,11 @@ public class RobotIO {
     public static Compressor compressor;
     public static PowerDistributionPanel pdp;
 
+    /*-----Climber-----*/
+    public static WPI_TalonSRX leftClimberMotor;
+    public static WPI_TalonSRX rightClimberMotor;
+    public static DoubleSolenoid climberPistonSolenoid;
+
     public RobotIO() {
         /*-----Cargo-----*/
         cargoSensor = new AnalogInput(RobotSettings.CARGO_SENSOR_PORT);
@@ -138,9 +143,9 @@ public class RobotIO {
             leftMotor3.setInverted(RobotSettings.INVERT_DRIVE);
         }
         if (rightMotor1 != null) {
-        rightMotor1.setInverted(RobotSettings.INVERT_DRIVE);
-        rightMotor2.setInverted(RobotSettings.INVERT_DRIVE);
-        rightMotor3.setInverted(RobotSettings.INVERT_DRIVE);
+            rightMotor1.setInverted(RobotSettings.INVERT_DRIVE);
+            rightMotor2.setInverted(RobotSettings.INVERT_DRIVE);
+            rightMotor3.setInverted(RobotSettings.INVERT_DRIVE);
         }
         if (leftMotor1 != null && rightMotor1 != null) {
             diffDrive = new DifferentialDrive(leftMotor1, rightMotor1);
@@ -170,7 +175,13 @@ public class RobotIO {
 
         /*-----Intake-----*/
         intakeMotor = new WPI_TalonSRX(RobotSettings.CARGO_MOTOR_ID);
-        intakeSolenoid = new DoubleSolenoid(RobotSettings.ARM_SOLENOID_PORT_1, RobotSettings.ARM_SOLENOID_PORT_2);
+        intakeSolenoid = new DoubleSolenoid(1,RobotSettings.ARM_SOLENOID_PORT_1, RobotSettings.ARM_SOLENOID_PORT_2);
+
+        /*-----Climber-----*/
+        leftClimberMotor = new WPI_TalonSRX(RobotSettings.CLIMBER_MOTOR_LEFT);
+        rightClimberMotor = new WPI_TalonSRX(RobotSettings.CLIMBER_MOTOR_RIGHT);
+        climberPistonSolenoid = new DoubleSolenoid(1,RobotSettings.CLIMBER_SOLENOID_PORT_1, RobotSettings.CLIMBER_SOLENOID_PORT_2);
+
 
         /*-----Misc-----*/
         driverStick = new Joystick(RobotSettings.DRIVER_STICK_PORT);

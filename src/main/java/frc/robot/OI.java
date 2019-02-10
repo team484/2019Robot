@@ -25,17 +25,25 @@ public class OI {
   private static Button releaseHatch;
   private static Button retractHatch;
 
-
+  private static Button goUp;
+  private static Button goDown;
+  private static Button goForward;
+  private static Button goBackward;
 
   public void setupOI() {
     
-    pickupCargo = new JoystickButton(RobotIO.operatorStick, 2);
     shootCargo = new JoystickButton(RobotIO.operatorStick, 1);
+    pickupCargo = new JoystickButton(RobotIO.operatorStick, 2);
     extendHatch = new JoystickButton(RobotIO.operatorStick, 3);
-    grabHatch = new JoystickButton(RobotIO.operatorStick, 5);
-    raiseIntake = new JoystickButton(RobotIO.operatorStick, 7);
-    releaseHatch = new JoystickButton(RobotIO.operatorStick, 6);
     retractHatch = new JoystickButton(RobotIO.operatorStick, 4);
+    grabHatch = new JoystickButton(RobotIO.operatorStick, 5);
+    releaseHatch = new JoystickButton(RobotIO.operatorStick, 6);
+    raiseIntake = new JoystickButton(RobotIO.operatorStick, 7);
+
+    goUp = new JoystickButton(RobotIO.driverStick, 1);
+    goDown = new JoystickButton(RobotIO.driverStick, 2);
+    goForward = new JoystickButton(RobotIO.driverStick, 3);
+    goBackward = new JoystickButton(RobotIO.driverStick, 4);
 
     pickupCargo.whenPressed(new PickupCargo());
     pickupCargo.whenReleased(new IntakeDoNothing());
@@ -45,6 +53,11 @@ public class OI {
     raiseIntake.whenPressed(new RaiseIntake());
     releaseHatch.whenPressed(new ReleaseHatch());
     retractHatch.whenPressed(new RetractHatch());
+
+    goUp.whileHeld(new ClimberGoUp());
+    goDown.whileHeld(new ClimberGoDown());
+    goForward.whenPressed(new ClimberTwoGoForward());
+    goBackward.whenPressed(new ClimberTwoGoBackward());
 
 
 

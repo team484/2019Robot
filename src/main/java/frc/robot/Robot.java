@@ -28,6 +28,8 @@ import frc.robot.subsystems.DriveSub;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.HatchSub;
 import frc.robot.subsystems.IntakeSub;
+import frc.robot.subsystems.ClimberSub;
+import frc.robot.subsystems.ClimberRailSub;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -45,6 +47,8 @@ public class Robot extends TimedRobot {
   public static final ElevatorSub elevatorSub = new ElevatorSub();
   public static final HatchSub hatchSub = new HatchSub();
   public static final IntakeSub intakeSub = new IntakeSub();
+  public static final ClimberSub climberSub = new ClimberSub();
+  public static final ClimberRailSub climberRailSub = new ClimberRailSub();
 
   /*-----Camera/vision vars-----*/
   private static boolean isCameraServerUp = false;
