@@ -15,7 +15,6 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
@@ -27,21 +26,17 @@ import edu.wpi.first.vision.VisionPipeline;
  */
 public class TargetVisionPipeline implements VisionPipeline {
     private Mat hsvThresholdOutput = new Mat();
-	private Mat cvErodeOutput = new Mat();
-	private Mat cvDilateOutput = new Mat();
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> convexHullsOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 
 	//Constants
-	private static final double[] hsvThresholdHue = {33.0, 94.0};
-	private static final double[] hsvThresholdSaturation = {81.0, 255.0};
-	private static final double[] hsvThresholdValue = {50.0, 200.0};
-	private static final double filterContoursMinArea = 500.0;
-	private static final double filterContoursMinWidth = 8.0;
-	private static final double filterContoursMinHeight = 10.0;
-	private static final double filterContoursMinRatio = 0.1;
-	private static final double filterContoursMaxRatio = 10;
+	private static final double[] hsvThresholdHue = {60.0, 75.0};
+	private static final double[] hsvThresholdSaturation = {120.0, 255.0};
+	private static final double[] hsvThresholdValue = {100.0, 255.0};
+	private static final double filterContoursMinArea = 50.0;
+	private static final double filterContoursMinWidth = 4.0;
+	private static final double filterContoursMinHeight = 5.0;
 	
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -58,22 +53,8 @@ public class TargetVisionPipeline implements VisionPipeline {
 
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
-		// Step CV_erode:
-		Mat cvErodeSrc = hsvThresholdOutput;
-		Mat cvErodeKernel = new Mat();
-		Point cvErodeAnchor = new Point(-1, -1);
-		Scalar cvErodeBordervalue = new Scalar(-1);
-		cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, 1.0, Core.BORDER_CONSTANT, cvErodeBordervalue, cvErodeOutput);
-
-		// Step CV_dilate:
-		Mat cvDilateSrc = cvErodeOutput;
-		Mat cvDilateKernel = new Mat();
-		Point cvDilateAnchor = new Point(-1, -1);
-		Scalar cvDilateBordervalue = new Scalar(-1);
-		cvDilate(cvDilateSrc, cvDilateKernel, cvDilateAnchor, 2.0, Core.BORDER_CONSTANT, cvDilateBordervalue, cvDilateOutput);
-
 		// Step Find_Contours:
-		Mat findContoursInput = cvDilateOutput;
+		Mat findContoursInput = hsvThresholdOutput;
 		findContours(findContoursInput, true, findContoursOutput);
 
 		// Step Convex_Hulls:
@@ -82,7 +63,7 @@ public class TargetVisionPipeline implements VisionPipeline {
 
 		// Step Filter_Contours:
 		ArrayList<MatOfPoint> filterContoursContours = convexHullsOutput;
-		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinWidth, filterContoursMinHeight, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
+		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinWidth, filterContoursMinHeight, filterContoursOutput);
 
 	}
 
@@ -92,22 +73,6 @@ public class TargetVisionPipeline implements VisionPipeline {
 	 */
 	public Mat hsvThresholdOutput() {
 		return hsvThresholdOutput;
-	}
-
-	/**
-	 * This method is a generated getter for the output of a CV_erode.
-	 * @return Mat output from CV_erode.
-	 */
-	public Mat cvErodeOutput() {
-		return cvErodeOutput;
-	}
-
-	/**
-	 * This method is a generated getter for the output of a CV_dilate.
-	 * @return Mat output from CV_dilate.
-	 */
-	public Mat cvDilateOutput() {
-		return cvDilateOutput;
 	}
 
 	/**
@@ -152,54 +117,6 @@ public class TargetVisionPipeline implements VisionPipeline {
 		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HSV);
 		Core.inRange(out, new Scalar(hue[0], sat[0], val[0]),
 			new Scalar(hue[1], sat[1], val[1]), out);
-	}
-
-	/**
-	 * Expands area of lower value in an image.
-	 * @param src the Image to erode.
-	 * @param kernel the kernel for erosion.
-	 * @param anchor the center of the kernel.
-	 * @param iterations the number of times to perform the erosion.
-	 * @param borderType pixel extrapolation method.
-	 * @param borderValue value to be used for a constant border.
-	 * @param dst Output Image.
-	 */
-	private static void cvErode(Mat src, Mat kernel, Point anchor, double iterations,
-		int borderType, Scalar borderValue, Mat dst) {
-		if (kernel == null) {
-			kernel = new Mat();
-		}
-		if (anchor == null) {
-			anchor = new Point(-1,-1);
-		}
-		if (borderValue == null) {
-			borderValue = new Scalar(-1);
-		}
-		Imgproc.erode(src, dst, kernel, anchor, (int)iterations, borderType, borderValue);
-	}
-
-	/**
-	 * Expands area of higher value in an image.
-	 * @param src the Image to dilate.
-	 * @param kernel the kernel for dilation.
-	 * @param anchor the center of the kernel.
-	 * @param iterations the number of times to perform the dilation.
-	 * @param borderType pixel extrapolation method.
-	 * @param borderValue value to be used for a constant border.
-	 * @param dst Output Image.
-	 */
-	private static void cvDilate(Mat src, Mat kernel, Point anchor, double iterations,
-	int borderType, Scalar borderValue, Mat dst) {
-		if (kernel == null) {
-			kernel = new Mat();
-		}
-		if (anchor == null) {
-			anchor = new Point(-1,-1);
-		}
-		if (borderValue == null){
-			borderValue = new Scalar(-1);
-		}
-		Imgproc.dilate(src, dst, kernel, anchor, (int)iterations, borderType, borderValue);
 	}
 
 	/**
@@ -258,7 +175,7 @@ public class TargetVisionPipeline implements VisionPipeline {
 	 * @param maxRatio maximum ratio of width to height
 	 */
 	private static void filterContours(List<MatOfPoint> inputContours, double minArea,
-		double minWidth, double minHeight, double minRatio, double maxRatio,
+		double minWidth, double minHeight,
 		List<MatOfPoint> output) {
 		output.clear();
 		//operation
@@ -269,8 +186,6 @@ public class TargetVisionPipeline implements VisionPipeline {
 			if (bb.height < minHeight) continue;
 			final double area = Imgproc.contourArea(contour);
 			if (area < minArea) continue;
-			final double ratio = bb.width / (double)bb.height;
-			if (ratio < minRatio || ratio > maxRatio) continue;
 			output.add(contour);
 		}
 	}

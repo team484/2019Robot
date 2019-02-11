@@ -10,7 +10,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.ClimberSub;
 import frc.robot.Robot;
-import frc.robot.RobotSettings;
 
 public class ClimberGoDown extends Command {
   public ClimberGoDown() {

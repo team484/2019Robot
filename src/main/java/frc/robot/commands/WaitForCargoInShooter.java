@@ -8,14 +8,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.ClimberSub;
-import frc.robot.Robot;
+import frc.robot.RobotIO;
+import frc.robot.RobotSettings;
 
-public class ClimberDoNothing extends Command {
-  public ClimberDoNothing() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    requires(Robot.climberSub);
+public class WaitForCargoInShooter extends Command {
+  public WaitForCargoInShooter() {
+
   }
 
   // Called just before this Command runs the first time
@@ -26,13 +24,13 @@ public class ClimberDoNothing extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ClimberSub.setSpeed(0);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+  
+    return (RobotIO.cargoSensor.getAverageVoltage()>RobotSettings.CARGO_SENSOR_VOLTAGE );
   }
 
   // Called once after isFinished returns true

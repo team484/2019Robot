@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -69,7 +70,7 @@ public class JoystickElevator extends Command {
     SmartDashboard.putNumber("ElevState", commandState);
     double newRate = ElevatorSub.getRate();
     double operatorInput = RobotIO.operatorStick.getY();
-    if (Math.abs(operatorInput) > 0.06) {
+    if (Math.abs(operatorInput) > 0.06 || DriverStation.getInstance().isDisabled()) {
       commandState = 0;
       pid.disable();
     }
@@ -105,7 +106,12 @@ public class JoystickElevator extends Command {
         break;
       }
     case 2:
-      //PID Loop running
+      if (pid.getSetpoint() < 2) {
+        if (pid.isEnabled()) {
+          pid.disable();
+        }
+        ElevatorSub.set(0);
+      }
     default:
       break;
     }

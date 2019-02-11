@@ -27,7 +27,8 @@ public class RobotSettings {
     public static final int CLIMBER_MOTOR_RIGHT = 12;
 
     /*-----Analog Ports-----*/
-    public static final int CARGO_SENSOR_PORT = 0;
+    public static final int CARGO_SHOOTER_SENSOR_PORT = 0;
+    public static final int CARGO_INTAKE_SENSOR_PORT = 1;
 
     /*-----Digital Ports-----*/
     public static final int LEFT_ENCODER_A_PORT = 0;
@@ -46,15 +47,20 @@ public class RobotSettings {
     public static final int BOTTOM_SOLENOID_PORT_1 = 1;
     public static final int BOTTOM_SOLENOID_PORT_2 = 0;
 
-    public static final int ARM_SOLENOID_PORT_1 = 0;
-    public static final int ARM_SOLENOID_PORT_2 = 1;
-    public static final int CLIMBER_SOLENOID_PORT_1 = 2;
-    public static final int CLIMBER_SOLENOID_PORT_2 = 3;
+    public static final int ARM_SOLENOID_PORT_1 = 2;
+    public static final int ARM_SOLENOID_PORT_2 = 3;
+    public static final int CLIMBER_SOLENOID_PORT_1 = 0;
+    public static final int CLIMBER_SOLENOID_PORT_2 = 1;
 
     /*-----Cargo Vars-----*/
     public static final double CARGO_SHOOT_SPEED = 0.8;
     public static final double CARGO_SENSOR_VOLTAGE = 2.0;
 
+    /*-----Climber Constants-----*/
+    public static final double speed = 0.5;
+    public static final int IMG_WIDTH = 640;
+    public static final int IMG_HEIGHT = 480;
+    
     /*-----Drive Vars-----*/
     public static final double DRIVE_ENCODER_DPP = 0.04908738521;
     public static final double DRIVE_MOTOR_ENC_DPP = 1.1170107213;
@@ -116,12 +122,10 @@ public class RobotSettings {
 
     /*-----Intake Vars-----*/
     public static final double INTAKE_MOTOR_SPEED = 1.0;
+    public static final double INTAKE_SENSOR_VOLTAGE = 1.0;
 
     /*-----Vision Vars-----*/
     public static final int DRIVER_CAM_ID = 0;
     public static final int VISION_CAM_ID = 1;
-    public static final double RADIANS_PER_PIXEL = 0.00736;
-
-    /*-----Climber Constants-----*/
-    public static final double speed = 0.5;
+    public static final double RADIANS_PER_PIXEL = 0.001955;
 }

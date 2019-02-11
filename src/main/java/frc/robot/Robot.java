@@ -12,12 +12,15 @@ import java.util.ArrayList;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -52,14 +55,14 @@ public class Robot extends TimedRobot {
 
   /*-----Camera/vision vars-----*/
   private static boolean isCameraServerUp = false;
-  private static boolean isDevMode = true;
+  private static boolean isDevMode = false;
   public static boolean disableVision = false;
   VisionThread visionThread;
+  public static long lastVisionUpdateTime;
   public static double targetAngle = 0.0; // The angle the robot must turn to face the target
-  public static double targetX = 0.0; // The x coordinate (distance left from middle of robot) of target
-  public static double targetY = 0.0; // The y coordinate (distance forward from front of robot) of target
+  public static double targetDistance = 0.0; // The x coordinate (distance left from middle of robot) of target
+  public static boolean targetFound = false; //If robot can see a vision target
   public static final Object imgLock = new Object();
-  public static long lastVisionUpdate = 0;
 
   public static OI oi;
 
@@ -73,7 +76,6 @@ public class Robot extends TimedRobot {
     oi = new OI();
     oi.setupOI();
     enableCameraServer();
-    visionThread.start();
   }
 
   /**
@@ -90,6 +92,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("DriveTrain Left Enc", RobotIO.leftEncoder.getDistance());
     SmartDashboard.putNumber("DriveTrain Right Enc", RobotIO.rightEncoder.getDistance());
     SmartDashboard.putNumber("Elevator Height", ElevatorSub.getHeight());
+    SmartDashboard.putNumber("Outtake IR", RobotIO.cargoSensor.getAverageVoltage());
+    double[] ypr = new double[3];
+    RobotIO.imu.getYawPitchRoll(ypr);
+    SmartDashboard.putNumber("Gyro", ypr[0]);
 
   }
 
@@ -164,105 +170,200 @@ public class Robot extends TimedRobot {
       driverCamera.setFPS(120);
 
       //-----Vision Camera-----
+      String[] args = new String[] {"/bin/bash", "-c", "v4l2-ctl -d 1 -c exposure_auto=1 -c exposure_absolute=10"};
+      Process proc = new ProcessBuilder(args).start();
+      proc.getOutputStream();
       UsbCamera visionCamera = CameraServer.getInstance().startAutomaticCapture(RobotSettings.VISION_CAM_ID);
-      visionCamera.setResolution(640, 480);
-      CvSource devStream = CameraServer.getInstance().putVideo("Dev Stream", 640, 480);
-
+      visionCamera.setResolution(RobotSettings.IMG_WIDTH, RobotSettings.IMG_HEIGHT);
+      visionCamera.setWhiteBalanceManual(3600);
+      //CvSink visionCVSink = CameraServer.getInstance().getVideo(visionCamera);
+      //CvSource devStream = CameraServer.getInstance().putVideo("Dev Stream", RobotSettings.IMG_WIDTH, RobotSettings.IMG_HEIGHT);
+      
+      
       //-----Computer Vision Thread-----
       visionThread = new VisionThread(visionCamera, new TargetVisionPipeline(), pipeline -> {
-        if (disableVision || pipeline.filterContoursOutput().isEmpty())
+        if (disableVision || (pipeline.filterContoursOutput().isEmpty() && !isDevMode))
           return;
-
-        ArrayList<MatOfPoint> lRects = new ArrayList<>(); //used for dev stream
-        ArrayList<MatOfPoint> rRects = new ArrayList<>(); //used for dev stream
-
-        RotatedRect largestLRect = null;
-        RotatedRect largestRRect = null;
-        double largestLRectSize = -1;
-        double largestRRectSize = -1;
+        ArrayList<VisionTapeResult> lRects = new ArrayList<>(); //used for dev stream
+        ArrayList<VisionTapeResult> rRects = new ArrayList<>(); //used for dev stream
+        double imgCenterX = RobotSettings.IMG_WIDTH / 2.0;
+        
+        VisionTapeResult centermostRect = null;
         //-----Loop through contours-----
+        SmartDashboard.putNumber("Contours", pipeline.filterContoursOutput().size());
         for (MatOfPoint contour : pipeline.filterContoursOutput()) {
           RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(contour.toArray()));
           double size = rect.size.height * rect.size.width;
 
-          if (rect.angle > -25 && rect.angle < -5) {
-            if (size > largestLRectSize) {
-              largestLRect = rect;
-              largestLRectSize = size;
-              if (isDevMode) {
-                MatOfPoint boxPts = new MatOfPoint();
-                Imgproc.boxPoints(rect, boxPts);
-                lRects.add(boxPts);
+          //Left Side Tape
+          if (rect.angle > -85 && rect.angle < -65) {
+            double width = rect.size.height; //l rects are backwards
+            Point[] points = new Point[4];
+            rect.points(points);
+            Point heighestPt = points[0];
+            
+            for (Point pt : points) {
+              //top of screen is 0 bottom is 480px so lowest y is highest pt
+              if (pt.y < heighestPt.y) {
+                heighestPt = pt;
               }
             }
+            double ppi = width/2.0;
+            double targetX = 5.935 * ppi + heighestPt.x;
+            double targetY = 12.5 * ppi + heighestPt.y;
+            VisionTapeResult result = new VisionTapeResult(rect, targetX, targetY, ppi, heighestPt, true);
+            lRects.add(result);
+            if (centermostRect == null) { //if this is first rect to be tested
+              centermostRect = result;
+            } else if (size / 2.0 > centermostRect.rect.size.area()) {//if old rect was too small
+              centermostRect = result;
+            } else if (Math.abs(centermostRect.targetX - imgCenterX) > Math.abs(targetX - imgCenterX)) { //if this rect has target closer to center
+              centermostRect = result;
+            }
 
-          } else if (rect.angle > -85 && rect.angle < -65) {
-            if (size > largestRRectSize) {
-              largestRRect = rect;
-              largestRRectSize = size;
-              if (isDevMode) {
-                MatOfPoint boxPts = new MatOfPoint();
-                Imgproc.boxPoints(rect, boxPts);
-                rRects.add(boxPts);
+          //Right Side Tape
+          } else if (rect.angle > -25 && rect.angle < -5) {
+            double width = rect.size.width; //r rects aren't backwards
+            Point[] points = new Point[4];
+            rect.points(points);
+            Point heighestPt = points[0];
+            
+            for (Point pt : points) {
+              //top of screen is 0 bottom is 480px so lowest y is highest pt
+              if (pt.y < heighestPt.y) {
+                heighestPt = pt;
               }
+            }
+            double ppi = width/2.0;
+            double targetX = -5.935 * ppi + heighestPt.x;
+            double targetY = 12.5 * ppi + heighestPt.y;
+            VisionTapeResult result = new VisionTapeResult(rect, targetX, targetY, ppi, heighestPt, false);
+            rRects.add(result);
+            if (centermostRect == null) { //if this is first rect to be tested
+              centermostRect = result;
+            } else if (size / 2.0 > centermostRect.rect.size.area()) {//if old rect was too small
+              centermostRect = result;
+            } else if (Math.abs(centermostRect.targetX - imgCenterX) > Math.abs(targetX - imgCenterX)) { //if this rect has target closer to center
+              centermostRect = result;
             }
           }
 
         }
 
-        if (largestLRectSize > largestRRectSize) {
-          if (largestRRect != null && largestLRect.center.x < largestRRect.center.x && largestLRectSize < largestRRectSize * 2.5) {
-            //We are good to use both rects to determine distance
-            double lRectAngleX = RobotSettings.RADIANS_PER_PIXEL * (320 - largestLRect.center.x);
-            double lRectAngleY = RobotSettings.RADIANS_PER_PIXEL * (240 - largestLRect.center.y);
-            double rRectAngleX = RobotSettings.RADIANS_PER_PIXEL * (320 - largestRRect.center.x);
-            double rRectAngleY = RobotSettings.RADIANS_PER_PIXEL * (240 - largestRRect.center.y);
-            double distance = 5.5 / Math.tan((lRectAngleX - rRectAngleX) / 2.0);
-            SmartDashboard.putNumber("TargetDistance", distance);
-            SmartDashboard.putNumber("TargetAngle", (lRectAngleX + rRectAngleX)/2.0); //Not actual angle but close
-            
+        VisionTapeResult leftRect = null;
+        VisionTapeResult rightRect = null;
+        if (centermostRect != null && centermostRect.isLeftRect) {
+          leftRect = centermostRect;
+          //Find potential right rect to accompany
+          VisionTapeResult nearestRect = null;
+          for (VisionTapeResult rect : rRects) {
+            if (nearestRect == null) {
+              nearestRect = rect;
+            } else if (centermostRect.getDistance(nearestRect) > centermostRect.getDistance(rect)) {
+              nearestRect = rect;
+            }
+          }
+          if (nearestRect != null && centermostRect.getDistance(nearestRect) < 4.0) {
+            rightRect = nearestRect;
+          }
+        } else if (centermostRect != null) {
+          rightRect = centermostRect;
+          //Find potential right rect to accompany
+          VisionTapeResult nearestRect = null;
+          for (VisionTapeResult rect : lRects) {
+            if (nearestRect == null) {
+              nearestRect = rect;
+            } else if (centermostRect.getDistance(nearestRect) > centermostRect.getDistance(rect)) {
+              nearestRect = rect;
+            }
+          }
+          if (nearestRect != null && centermostRect.getDistance(nearestRect) < 4.0) {
+            leftRect = nearestRect;
           }
         }
-
-        if (largestRRectSize > largestLRectSize) {
-          if (largestLRect != null && largestLRect.center.x < largestRRect.center.x && largestRRectSize < largestLRectSize * 2.5) {
-            //We are good to use both rects to determine distance
-            double lRectAngleX = RobotSettings.RADIANS_PER_PIXEL * (320 - largestLRect.center.x);
-            double lRectAngleY = RobotSettings.RADIANS_PER_PIXEL * (240 - largestLRect.center.y);
-            double rRectAngleX = RobotSettings.RADIANS_PER_PIXEL * (320 - largestRRect.center.x);
-            double rRectAngleY = RobotSettings.RADIANS_PER_PIXEL * (240 - largestRRect.center.y);
-            double distance = 5.5 / Math.tan((lRectAngleX - rRectAngleX) / 2.0);
-            SmartDashboard.putNumber("TargetDistance", distance);
-            SmartDashboard.putNumber("TargetAngle", (lRectAngleX + rRectAngleX)/2.0); //Not actual angle but close
-            
-          }
+        double targetX=0;
+        double targetY=0;
+        double ppi=0;
+        boolean targetFound = true;
+        double distance = 0;
+        double angleX = 0;
+        double angleXDeg = 0;
+        if (leftRect != null && rightRect != null) {
+          //use both tape to find target
+          targetX = (leftRect.outsideEdge.x + rightRect.outsideEdge.x) / 2.0;
+          ppi = (rightRect.outsideEdge.x - leftRect.outsideEdge.x) / 11.87;
+          targetY = (leftRect.outsideEdge.y + rightRect.outsideEdge.y) / 2.0 + 12.5 * ppi;
+        } else if (leftRect != null) {
+          targetX = leftRect.targetX;
+          targetY = leftRect.targetY;
+          ppi = leftRect.ppi;
+        } else if (rightRect != null) {
+          targetX = rightRect.targetX;
+          targetY = rightRect.targetY;
+          ppi = rightRect.ppi;
+        } else {
+          //No target found
+          targetFound = false;
         }
-        
+        if (targetFound) {
+          //Calculate target location in real space
+          double anglePerInch = ppi * RobotSettings.RADIANS_PER_PIXEL;
+          distance = 1.0/Math.tan(anglePerInch) - 15.5;
+          angleX = (imgCenterX - targetX) * RobotSettings.RADIANS_PER_PIXEL;
+          angleXDeg = Math.toDegrees(angleX);
+          Robot.targetAngle = angleXDeg;
+          Robot.targetDistance = distance;
+        }
+        SmartDashboard.putNumber("Vision frame rate (ms)", System.currentTimeMillis() - Robot.lastVisionUpdateTime);
+        Robot.targetFound = targetFound;
+        Robot.lastVisionUpdateTime = System.currentTimeMillis();
         if (isDevMode) {
-          Mat img = pipeline.startImage();
-          Imgproc.drawContours(img, lRects, 0, new Scalar(255, 0, 0));
-          Imgproc.drawContours(img, rRects, 0, new Scalar(0, 0, 255));
-          devStream.putFrame(img);
-          if (largestLRect != null) {
-            SmartDashboard.putNumber("LRectSize", largestLRectSize);
-            SmartDashboard.putNumber("LRectX", largestLRect.center.x);
-            SmartDashboard.putNumber("LRectY", largestLRect.center.y);
-            SmartDashboard.putNumber("LRectWidth", largestLRect.size.width);
-            SmartDashboard.putNumber("LRectHeight", largestLRect.size.height);
-            SmartDashboard.putNumber("LRectAngle", largestLRect.angle);
+          Mat img = new Mat();
+          //visionCVSink.grabFrame(img);
+          for (VisionTapeResult res : lRects) {
+            Point[] rectpts = new Point[4]; res.rect.points(rectpts);
+            for (int i = 0; i < 4; i++) {
+              Imgproc.line(img, rectpts[i], rectpts[(i+1)%4], new Scalar(255,0,0));
+            }
           }
-          if (largestRRect != null) {
-            SmartDashboard.putNumber("RRectSize", largestRRectSize);
-            SmartDashboard.putNumber("RRectX", largestRRect.center.x);
-            SmartDashboard.putNumber("RRectY", largestRRect.center.y);
-            SmartDashboard.putNumber("RRectWidth", largestRRect.size.width);
-            SmartDashboard.putNumber("RRectHeight", largestRRect.size.height);
-            SmartDashboard.putNumber("RRectAngle", largestRRect.angle);
+          for (VisionTapeResult res : rRects) {
+            Point[] rectpts = new Point[4]; res.rect.points(rectpts);
+            for (int i = 0; i < 4; i++) {
+              Imgproc.line(img, rectpts[i], rectpts[(i+1)%4], new Scalar(0,0,255));
+            }
           }
+          if (leftRect != null) {
+            Point[] rectpts = new Point[4]; leftRect.rect.points(rectpts);
+            for (int i = 0; i < 4; i++) {
+              Imgproc.line(img, rectpts[i], rectpts[(i+1)%4], new Scalar(255,100,0));
+            }
+          }
+          if (rightRect != null) {
+            Point[] rectpts = new Point[4]; rightRect.rect.points(rectpts);
+            for (int i = 0; i < 4; i++) {
+              Imgproc.line(img, rectpts[i], rectpts[(i+1)%4], new Scalar(0,100,255));
+            }
+          }
+          if (targetFound) {
+            Imgproc.circle(img, new Point(targetX, targetY), (int) (ppi * 8.25), new Scalar(0,255,255));
+            Imgproc.line(img, new Point(targetX - 20, targetY), new Point(targetX + 20, targetY), new Scalar(0,2550,255));
+            Imgproc.line(img, new Point(targetX, targetY - 20), new Point(targetX, targetY + 20), new Scalar(0,2550,255));
+            SmartDashboard.putNumber("distance", distance);
+            SmartDashboard.putNumber("angleDeg", angleXDeg);
+            SmartDashboard.putBoolean("Target", true);
+          } else {
+            SmartDashboard.putBoolean("Target", false);
+          }
+          //devStream.putFrame(img);
+        } else {
+          SmartDashboard.putNumber("distance", distance);
+          SmartDashboard.putNumber("angleDeg", angleXDeg);
+          SmartDashboard.putBoolean("Target", targetFound);
+
         }
 
       });
-
+      visionThread.start();
       isCameraServerUp = true;
     } catch (Exception e) {
       e.printStackTrace();

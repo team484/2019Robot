@@ -30,6 +30,10 @@ public class ElevatorSub extends Subsystem {
   }
 
   public static void set(double speed) {
+    if (getHeight() < 2 && speed < 0.5) {
+      RobotIO.elevatorMotorLeft.getPIDController().setReference(0, ControlType.kVoltage);
+      RobotIO.elevatorMotorRight.getPIDController().setReference(0, ControlType.kVoltage);
+    }
     RobotIO.elevatorMotorLeft.getPIDController().setReference((speed*RobotSettings.ELEVATOR_SPEED_MULTIPLYER + RobotSettings.ELEVATOR_GRAVITY_COMP), ControlType.kVoltage);
     RobotIO.elevatorMotorRight.getPIDController().setReference((-speed*RobotSettings.ELEVATOR_SPEED_MULTIPLYER - RobotSettings.ELEVATOR_GRAVITY_COMP), ControlType.kVoltage);
   }

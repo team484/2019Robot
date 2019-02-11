@@ -13,7 +13,7 @@ public class LoadCargo extends CommandGroup {
 
   public LoadCargo() {
     addParallel(new ShootCargo());
-    addSequential(new WaitForCargo());
+    addSequential(new WaitForCargoInShooter());
     addSequential(new CargoDoNothing());
   }
 }

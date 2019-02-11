@@ -14,8 +14,13 @@ public class PickupCargo extends CommandGroup {
   public PickupCargo() {
 
     addParallel(new LowerIntake());
-    addSequential(new SpinIntake());
-    
+    addParallel(new ShootCargo());
+    addParallel(new SpinIntake());
+    addSequential(new WaitForCargoInIntake());
+    addParallel(new RaiseIntake());
+    addSequential(new WaitForCargoInShooter());
+    addParallel(new CargoDoNothing());
+    addSequential(new IntakeDoNothing());
 
   }
   

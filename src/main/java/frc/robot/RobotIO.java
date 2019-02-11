@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Add your docs here.
@@ -30,6 +31,11 @@ public class RobotIO {
     /*-----Cargo-----*/
     public static WPI_TalonSRX cargoMotor;
     public static AnalogInput cargoSensor;
+
+    /*-----Climber-----*/
+    public static WPI_TalonSRX leftClimberMotor;
+    public static WPI_TalonSRX rightClimberMotor;
+    public static DoubleSolenoid climberPistonSolenoid;
 
     /*-----Drivetrain-----*/
     public static CANSparkMax leftMotor1;
@@ -53,6 +59,7 @@ public class RobotIO {
     /*-----Intake-----*/
     public static WPI_TalonSRX intakeMotor;
     public static DoubleSolenoid intakeSolenoid;
+    public static AnalogInput intakeSensor;
 
     /*-----Misc-----*/
     public static Joystick driverStick;
@@ -61,16 +68,17 @@ public class RobotIO {
     public static Compressor compressor;
     public static PowerDistributionPanel pdp;
 
-    /*-----Climber-----*/
-    public static WPI_TalonSRX leftClimberMotor;
-    public static WPI_TalonSRX rightClimberMotor;
-    public static DoubleSolenoid climberPistonSolenoid;
-
     public RobotIO() {
         /*-----Cargo-----*/
-        cargoSensor = new AnalogInput(RobotSettings.CARGO_SENSOR_PORT);
+        cargoSensor = new AnalogInput(RobotSettings.CARGO_SHOOTER_SENSOR_PORT);
         cargoMotor = new WPI_TalonSRX(RobotSettings.INTAKE_MOTOR_ID);
         cargoMotor.setInverted(true);
+
+        /*-----Climber-----*/
+        leftClimberMotor = new WPI_TalonSRX(RobotSettings.CLIMBER_MOTOR_LEFT);
+        rightClimberMotor = new WPI_TalonSRX(RobotSettings.CLIMBER_MOTOR_RIGHT);
+        climberPistonSolenoid = new DoubleSolenoid(1, RobotSettings.CLIMBER_SOLENOID_PORT_1,
+                RobotSettings.CLIMBER_SOLENOID_PORT_2);
 
         /*-----Drivetrain-----*/
         try {
@@ -155,6 +163,7 @@ public class RobotIO {
 
         leftEncoder.setDistancePerPulse(RobotSettings.DRIVE_ENCODER_DPP);
         rightEncoder.setDistancePerPulse(-RobotSettings.DRIVE_ENCODER_DPP);
+
         /*-----Elevator-----*/
         try {
             elevatorMotorLeft = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_LEFT_ID, MotorType.kBrushless);
@@ -172,16 +181,20 @@ public class RobotIO {
         topHatchSolenoid = new DoubleSolenoid(RobotSettings.TOP_SOLENOID_PORT_1, RobotSettings.TOP_SOLENOID_PORT_2);
         bottomHatchSolenoid = new DoubleSolenoid(RobotSettings.BOTTOM_SOLENOID_PORT_1,
                 RobotSettings.BOTTOM_SOLENOID_PORT_2);
-
+        try {
+            topHatchSolenoid.get();
+        } catch (Exception e1) {
+            errors.add("Cannot connect to front PCM");
+        }
         /*-----Intake-----*/
         intakeMotor = new WPI_TalonSRX(RobotSettings.CARGO_MOTOR_ID);
-        intakeSolenoid = new DoubleSolenoid(1,RobotSettings.ARM_SOLENOID_PORT_1, RobotSettings.ARM_SOLENOID_PORT_2);
-
-        /*-----Climber-----*/
-        leftClimberMotor = new WPI_TalonSRX(RobotSettings.CLIMBER_MOTOR_LEFT);
-        rightClimberMotor = new WPI_TalonSRX(RobotSettings.CLIMBER_MOTOR_RIGHT);
-        climberPistonSolenoid = new DoubleSolenoid(1,RobotSettings.CLIMBER_SOLENOID_PORT_1, RobotSettings.CLIMBER_SOLENOID_PORT_2);
-
+        intakeSolenoid = new DoubleSolenoid(1, RobotSettings.ARM_SOLENOID_PORT_1, RobotSettings.ARM_SOLENOID_PORT_2);
+        intakeSensor = new AnalogInput(RobotSettings.CARGO_INTAKE_SENSOR_PORT);
+        try {
+            intakeSolenoid.get();
+        } catch (Exception e) {
+            errors.add("Cannot connect to rear PCM");
+        }
 
         /*-----Misc-----*/
         driverStick = new Joystick(RobotSettings.DRIVER_STICK_PORT);
@@ -189,5 +202,11 @@ public class RobotIO {
         imu = new PigeonIMU(cargoMotor);
         compressor = new Compressor();
         pdp = new PowerDistributionPanel();
+        //SmartDashboard.putStringArray("Errors", errors.toArray(new String[errors.size()]));
+        for (int i = 0; i < 5; i++) {
+            String text = errors.size() > i ? errors.get(i) : "";
+            SmartDashboard.putString("err" + i, text);
+        }
+        SmartDashboard.putNumber("Errors", errors.size());
     }
 }

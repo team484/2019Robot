@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
 
-public class WaitForCargo extends Command {
-  public WaitForCargo() {
+public class WaitForCargoInIntake extends Command {
+  public WaitForCargoInIntake() {
 
   }
 
@@ -30,7 +30,7 @@ public class WaitForCargo extends Command {
   @Override
   protected boolean isFinished() {
   
-    return (RobotIO.cargoSensor.getAverageVoltage()>RobotSettings.CARGO_SENSOR_VOLTAGE );
+    return (RobotIO.intakeSensor.getAverageVoltage()>RobotSettings.INTAKE_SENSOR_VOLTAGE );
   }
 
   // Called once after isFinished returns true
