@@ -11,12 +11,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveSub;
 
-public class DriveUntilDistance extends Command {
+
+public class DriveUntilDistanceCollisionStop extends Command {
   private double speed;
   private double distance;
-  public DriveUntilDistance(double speed, double distance) {
-    this.speed = speed;
-    this.distance = distance;
+  public DriveUntilDistanceCollisionStop() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.driveSub);
@@ -32,15 +31,12 @@ public class DriveUntilDistance extends Command {
   @Override
   protected void execute() {
     DriveSub.set(speed, 0);
-    
-
-     
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return DriveSub.getDistance() > distance;
+    return DriveSub.getDistance() > distance || (speed <= 0 && distance >= 1); 
   }
 
   // Called once after isFinished returns true
