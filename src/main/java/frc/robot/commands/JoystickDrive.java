@@ -12,15 +12,12 @@ import frc.robot.Robot;
 import frc.robot.RobotIO;
 import frc.robot.subsystems.DriveSub;
 
+/**
+ * Uses driver joystick inputs to control the drivetrain
+ */
 public class JoystickDrive extends Command {
   public JoystickDrive() {
-    // Use requires() here to declare subsystem dependencies
     requires(Robot.driveSub);
-  }
-
-  // Called just before this Command runs the first time
-  @Override
-  protected void initialize() {
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -29,21 +26,16 @@ public class JoystickDrive extends Command {
     DriveSub.set(-RobotIO.driverStick.getY(), RobotIO.driverStick.getX());
   }
 
-  // Make this return true when this Command no longer needs to run execute()
+  // This command is never finished
   @Override
   protected boolean isFinished() {
     return false;
   }
 
-  // Called once after isFinished returns true
+  // Called once after command is interrupted
   @Override
   protected void end() {
+    DriveSub.set(0,0);
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
 }

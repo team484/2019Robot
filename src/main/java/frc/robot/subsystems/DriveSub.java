@@ -7,15 +7,13 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.ControlType;
-
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
 import frc.robot.commands.JoystickDrive;
 
 /**
- * Add your docs here.
+ * Subsystem for the drivetrain
  */
 public class DriveSub extends Subsystem {
   private static double lastLDistReset = 0;
@@ -23,18 +21,39 @@ public class DriveSub extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
     setDefaultCommand(new JoystickDrive());
   }
 
   public static void set(double speed, double rot) {
+    if (RobotIO.diffDrive == null) {
+      return;
+    }
     RobotIO.diffDrive.arcadeDrive(speed, rot);
   }
 
-  public static void setVoltage(double leftVoltage, double rightVoltage) {
-    RobotIO.leftMotor1.getPIDController().setReference(leftVoltage, ControlType.kVoltage);
-    RobotIO.rightMotor1.getPIDController().setReference(-rightVoltage, ControlType.kVoltage);
-    RobotIO.diffDrive.feed();
+  public static void tankDrive(double left, double right) {
+    if (RobotIO.diffDrive == null) {
+      return;
+    }
+    RobotIO.diffDrive.tankDrive(left, right);
+  }
+
+  public static void setVoltageCompensation(boolean enabled) {
+    if (enabled) {
+      RobotIO.leftMotor1.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
+      RobotIO.leftMotor2.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
+      RobotIO.leftMotor3.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
+      RobotIO.rightMotor1.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
+      RobotIO.rightMotor2.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
+      RobotIO.rightMotor3.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
+    } else {
+      RobotIO.leftMotor1.disableVoltageCompensation();
+      RobotIO.leftMotor2.disableVoltageCompensation();
+      RobotIO.leftMotor3.disableVoltageCompensation();
+      RobotIO.rightMotor1.disableVoltageCompensation();
+      RobotIO.rightMotor2.disableVoltageCompensation();
+      RobotIO.rightMotor3.disableVoltageCompensation();
+    }
   }
 
   public static double getDistance() {
@@ -63,6 +82,7 @@ public class DriveSub extends Subsystem {
   }
 
   private static double lastLd1 = 0;
+
   private static double getLeftIntegratedEncDistance() {
     double d1 = RobotIO.leftMotor1.getEncoder().getPosition() * RobotSettings.DRIVE_MOTOR_ENC_DPP;
     if (d1 == 0) {
@@ -73,6 +93,7 @@ public class DriveSub extends Subsystem {
   }
 
   private static double lastRd1 = 0;
+
   private static double getRightIntegratedEncDistance() {
     double d1 = -RobotIO.rightMotor1.getEncoder().getPosition() * RobotSettings.DRIVE_MOTOR_ENC_DPP;
     if (d1 == 0) {
@@ -82,26 +103,26 @@ public class DriveSub extends Subsystem {
     return d1;
   }
 
-  	/**
-	 * Gets the current heading (yaw) of the gyro.
-	 * @return - yaw in degrees
-	 */
+  /**
+   * Gets the current heading (yaw) of the gyro.
+   * 
+   * @return - yaw in degrees
+   */
   public static double getHeading() {
     double[] ypr = new double[3];
     RobotIO.imu.getYawPitchRoll(ypr);
     return ypr[0];
-
-  
   }
 
   public static double pidOut1, pidOut2;
+
   public static void doublePIDDrive() {
-		set(pidOut1, pidOut2);
+    set(pidOut1, pidOut2);
   }
-  
+
   public static double getRate() {
-    double leftRate = RobotIO.leftMotor1.getEncoder().getVelocity() * RobotSettings.DRIVE_MOTOR_ENC_DPP;
-    double rightRate = -RobotIO.rightMotor1.getEncoder().getVelocity() * RobotSettings.DRIVE_MOTOR_ENC_DPP;
-    return (leftRate > rightRate) ? leftRate : rightRate;
+    double leftEncRate = RobotIO.leftEncoder.getRate();
+    double rightEncRate = RobotIO.rightEncoder.getRate();
+    return (leftEncRate > rightEncRate) ? leftEncRate : rightEncRate;
   }
 }

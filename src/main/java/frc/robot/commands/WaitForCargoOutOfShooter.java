@@ -8,34 +8,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
+import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
-import frc.robot.subsystems.IntakeSub;
 
 /**
- * Spins the cargo intake wheels
+ * This command runs until cargo is no longer sticking out of the back of the
+ * shooter.
  */
-public class SpinIntake extends Command {
-  public SpinIntake() {
-    requires(Robot.intakeSub);
-  }
+public class WaitForCargoOutOfShooter extends Command {
 
-  // Called repeatedly when this Command is scheduled to run
-  @Override
-  protected void execute() {
-    IntakeSub.setSpeed(RobotSettings.INTAKE_MOTOR_SPEED);
-  }
-
-  // This command never finishes. Interrupt it to end it.
+  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-    IntakeSub.setSpeed(0);
+    return (RobotIO.cargoSensor.getAverageVoltage() < RobotSettings.CARGO_SENSOR_OUT_VOLTAGE);
   }
 
 }

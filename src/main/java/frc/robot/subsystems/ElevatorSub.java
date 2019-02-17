@@ -7,41 +7,70 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.ControlType;
-
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
 import frc.robot.commands.JoystickElevator;
 
 /**
- * Add your docs here.
+ * Subsystem for the elevator
  */
 public class ElevatorSub extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-    
     setDefaultCommand(new JoystickElevator());
   }
 
   public static void set(double speed) {
-    if (getHeight() < 2 && speed < 0.5) {
-      RobotIO.elevatorMotorLeft.getPIDController().setReference(0, ControlType.kVoltage);
-      RobotIO.elevatorMotorRight.getPIDController().setReference(0, ControlType.kVoltage);
+    set(speed, false);
+  }
+
+  public static void set(double speed, boolean managed) {
+    if (RobotIO.elevatorMotorLeft == null || RobotIO.elevatorMotorRight == null) {
+      return;
     }
-    RobotIO.elevatorMotorLeft.getPIDController().setReference((speed*RobotSettings.ELEVATOR_SPEED_MULTIPLYER + RobotSettings.ELEVATOR_GRAVITY_COMP), ControlType.kVoltage);
-    RobotIO.elevatorMotorRight.getPIDController().setReference((-speed*RobotSettings.ELEVATOR_SPEED_MULTIPLYER - RobotSettings.ELEVATOR_GRAVITY_COMP), ControlType.kVoltage);
+    double height = getHeight();
+    double rate = getRate();
+    if (getHeight() < 2 && speed < 0.08) {
+      RobotIO.elevatorMotorLeft.set(0);
+      RobotIO.elevatorMotorRight.set(0);
+      return;
+    }
+    double minRate = -height * RobotSettings.ELEVATOR_MAX_DECEL_RATE;
+    SmartDashboard.putNumber("MIN RATE", minRate);
+    double maxRate = (RobotSettings.ELEVATOR_UP_THRESHOLD - height) * RobotSettings.ELEVATOR_MAX_DECEL_RATE;
+    SmartDashboard.putNumber("MAX RATE", maxRate);
+    SmartDashboard.putNumber("RATE", rate);
+
+    if (minRate < 0 && rate < minRate && speed < 0 && managed) {
+      RobotIO.elevatorMotorLeft.set(RobotSettings.ELEVATOR_GRAVITY_COMP);
+      RobotIO.elevatorMotorRight.set(-RobotSettings.ELEVATOR_GRAVITY_COMP);
+    } else if (maxRate > 0 && rate > maxRate && speed > 0 && managed) {
+      RobotIO.elevatorMotorLeft.set(RobotSettings.ELEVATOR_GRAVITY_COMP);
+      RobotIO.elevatorMotorRight.set(-RobotSettings.ELEVATOR_GRAVITY_COMP);
+    } else {
+      RobotIO.elevatorMotorLeft
+          .set(speed * RobotSettings.ELEVATOR_SPEED_MULTIPLYER + RobotSettings.ELEVATOR_GRAVITY_COMP);
+      RobotIO.elevatorMotorRight
+          .set(-speed * RobotSettings.ELEVATOR_SPEED_MULTIPLYER - RobotSettings.ELEVATOR_GRAVITY_COMP);
+    }
   }
 
   private static double lastHeight = 0;
+
   public static double getHeight() {
-    double left = RobotIO.elevatorMotorLeft.getEncoder().getPosition() * RobotSettings.ELEVATOR_ENCODER_DPP;
-    double right = -RobotIO.elevatorMotorRight.getEncoder().getPosition() * RobotSettings.ELEVATOR_ENCODER_DPP;
+    double left = (RobotIO.elevatorMotorLeft == null) ? 0
+        : RobotIO.elevatorMotorLeft.getEncoder().getPosition() * RobotSettings.ELEVATOR_ENCODER_DPP;
+    double right = (RobotIO.elevatorMotorRight == null) ? 0
+        : -RobotIO.elevatorMotorRight.getEncoder().getPosition() * RobotSettings.ELEVATOR_ENCODER_DPP;
+    if (left < 0) {
+      RobotIO.elevatorMotorLeft.setEncPosition(0);
+    }
+    if (right < 0) {
+      RobotIO.elevatorMotorRight.setEncPosition(0);
+    }
     if (left == 0 && right == 0) {
       return lastHeight;
     }
@@ -53,7 +82,7 @@ public class ElevatorSub extends Subsystem {
       lastHeight = left;
       return left;
     }
-    lastHeight = (left+right)/2.0;
+    lastHeight = (left + right) / 2.0;
     return lastHeight;
   }
 
@@ -62,8 +91,10 @@ public class ElevatorSub extends Subsystem {
   }
 
   public static double getRate() {
-    double leftRate = RobotIO.elevatorMotorLeft.getEncoder().getVelocity() * RobotSettings.ELEVATOR_ENCODER_DPP;
-    double rightRate = -RobotIO.elevatorMotorRight.getEncoder().getVelocity() * RobotSettings.ELEVATOR_ENCODER_DPP;
+    double leftRate = (RobotIO.elevatorMotorLeft == null) ? 0
+        : RobotIO.elevatorMotorLeft.getEncoder().getVelocity() * RobotSettings.ELEVATOR_ENCODER_DPP / 60.0;
+    double rightRate = (RobotIO.elevatorMotorRight == null) ? 0
+        : -RobotIO.elevatorMotorRight.getEncoder().getVelocity() * RobotSettings.ELEVATOR_ENCODER_DPP / 60.0;
     return (leftRate > rightRate) ? leftRate : rightRate;
   }
 }

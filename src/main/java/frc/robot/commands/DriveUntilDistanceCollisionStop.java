@@ -11,13 +11,17 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveSub;
 
-
+/**
+ * Drives at a set speed until a set distance is reached or the robot stops
+ * moving
+ */
 public class DriveUntilDistanceCollisionStop extends Command {
   private double speed;
   private double distance;
-  public DriveUntilDistanceCollisionStop() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+
+  public DriveUntilDistanceCollisionStop(double speed, double distance) {
+    this.speed = speed;
+    this.distance = distance;
     requires(Robot.driveSub);
   }
 
@@ -36,7 +40,7 @@ public class DriveUntilDistanceCollisionStop extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return DriveSub.getDistance() > distance || (speed <= 0 && distance >= 1); 
+    return DriveSub.getDistance() > distance || (speed <= 0 && distance >= 1);
   }
 
   // Called once after isFinished returns true
@@ -45,10 +49,4 @@ public class DriveUntilDistanceCollisionStop extends Command {
     DriveSub.set(0, 0);
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
 }

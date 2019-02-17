@@ -7,28 +7,30 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotIO;
-import frc.robot.commands.ClimberDoNothing;
 
 /**
- * Add your docs here.
+ * Subsystem for the climber pistons
  */
 public class ClimberSub extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
-
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new ClimberDoNothing());
   }
 
-  public static void setSpeed(double speed) {
-    RobotIO.leftClimberMotor.set(speed);
-    RobotIO.rightClimberMotor.set(speed);
+  public static void set(Value direction) {
+    if (RobotIO.climberBackSolenoid == null) {
+      return;
+    }
+    RobotIO.climberBackSolenoid.set(direction);
+  }
 
+  public static void setFront(Value direction) {
+    if (RobotIO.climberFrontSolenoid == null) {
+      return;
+    }
+    RobotIO.climberFrontSolenoid.set(direction);
   }
 }

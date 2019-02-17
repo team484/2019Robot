@@ -7,13 +7,18 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.command.InstantCommand;
+import frc.robot.subsystems.ClimberSub;
 
-public class LoadCargo extends CommandGroup {
+/**
+ * Extends the front climber pistons to raise the robot
+ */
+public class ClimberFrontUp extends InstantCommand {
 
-  public LoadCargo() {
-    addParallel(new ShootCargo());
-    addSequential(new WaitForCargoInShooter());
-    addSequential(new CargoDoNothing());
+  @Override
+  protected void execute() {
+    ClimberSub.setFront(Value.kForward);
   }
+
 }

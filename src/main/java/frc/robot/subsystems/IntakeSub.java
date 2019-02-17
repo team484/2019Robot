@@ -14,29 +14,26 @@ import frc.robot.RobotIO;
 import frc.robot.commands.IntakeDoNothing;
 
 /**
- * Add your docs here.
+ * Subsystem for the cargo intake
  */
 public class IntakeSub extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
     setDefaultCommand(new IntakeDoNothing());
   }
 
   public static void setSpeed(double speed) {
-    if (RobotIO.intakeMotor == null) return;
+    if (RobotIO.intakeMotor == null)
+      return;
     RobotIO.intakeMotor.set(speed);
-
   }
 
   public static void setArm(Value v) {
-
+    if (RobotIO.intakeSolenoid == null) {
+      return;
+    }
     RobotIO.intakeSolenoid.set(v);
-
   }
-
 
 }

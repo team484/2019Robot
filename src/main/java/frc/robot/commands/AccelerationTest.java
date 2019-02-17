@@ -11,19 +11,25 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveSub;
 
+/**
+ * Runs the robot at a given speed and prints the acceleration to the console
+ */
 public class AccelerationTest extends Command {
-  double voltage;
-  public AccelerationTest(double voltage) {
-    this.voltage = voltage;
-    // Use requires() here to declare subsystem dependencies
+  double speed;
+
+  public AccelerationTest(double speed) {
+    this.speed = speed;
     requires(Robot.driveSub);
   }
+
   private long lastTime;
   private double lastRate;
   private long startTime;
+
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    DriveSub.setVoltageCompensation(true);
     lastTime = System.currentTimeMillis();
     startTime = lastTime;
     lastRate = DriveSub.getRate();
@@ -38,11 +44,12 @@ public class AccelerationTest extends Command {
     double newRate = DriveSub.getRate();
     double accel = newRate - lastRate;
     lastRate = newRate;
-  DriveSub.setVoltage(voltage, voltage);
-  System.out.println((System.currentTimeMillis() - startTime) +" Accel: " + 1000.0 * accel/((double)diff) + "in/s^2" + " speed: " + newRate);
-}
+    DriveSub.set(speed, 0);
+    System.out.println((System.currentTimeMillis() - startTime) + " Accel: " + 1000.0 * accel / ((double) diff)
+        + "in/s^2" + " speed: " + newRate);
+  }
 
-  // Make this return true when this Command no longer needs to run execute()
+  // This command is never finished. To stop, call interrupt.
   @Override
   protected boolean isFinished() {
     return false;
@@ -51,13 +58,8 @@ public class AccelerationTest extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    DriveSub.setVoltageCompensation(false);
     DriveSub.set(0, 0);
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
 }

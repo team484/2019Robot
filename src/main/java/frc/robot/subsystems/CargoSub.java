@@ -9,22 +9,22 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotIO;
-import frc.robot.commands.CargoDoNothing;
+import frc.robot.commands.CargoForwardUntilClear;
 
 /**
- * Add your docs here.
+ * Subsystem for cargo shooter
  */
 public class CargoSub extends Subsystem {
-  
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new CargoDoNothing()); 
+    setDefaultCommand(new CargoForwardUntilClear());
   }
 
   public static void set(double speed) {
+    if (RobotIO.cargoMotor == null) {
+      return;
+    }
     RobotIO.cargoMotor.set(speed);
   }
 }

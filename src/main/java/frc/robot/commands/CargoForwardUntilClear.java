@@ -7,28 +7,20 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
-import frc.robot.subsystems.CargoSub;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
+import frc.robot.RobotSettings;
 
 /**
- * Keeps cargo shooter motor off
+ * Slowly moves the cargo forward in the shooter until it no longer interferes
+ * with the elevator
  */
-public class CargoDoNothing extends Command {
-  public CargoDoNothing() {
-    requires(Robot.cargoSub);
-  }
+public class CargoForwardUntilClear extends CommandGroup {
 
-  // Called repeatedly when this Command is scheduled to run
-  @Override
-  protected void execute() {
-    CargoSub.set(0);
+  public CargoForwardUntilClear() {
+    addParallel(new ShootCargo(RobotSettings.CARGO_INTAKE_SPEED, true));
+    addSequential(new WaitForCargoOutOfShooter());
+    addParallel(new CargoDoNothing());
+    addSequential(new WaitCommand(1));
   }
-
-  // This command is never finished
-  @Override
-  protected boolean isFinished() {
-    return false;
-  }
-
 }

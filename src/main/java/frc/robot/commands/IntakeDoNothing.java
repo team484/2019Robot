@@ -11,16 +11,12 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.IntakeSub;
 
+/**
+ * Prevents the intake motor from spinning
+ */
 public class IntakeDoNothing extends Command {
   public IntakeDoNothing() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
     requires(Robot.intakeSub);
-  }
-
-  // Called just before this Command runs the first time
-  @Override
-  protected void initialize() {
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -29,20 +25,10 @@ public class IntakeDoNothing extends Command {
     IntakeSub.setSpeed(0);
   }
 
-  // Make this return true when this Command no longer needs to run execute()
+  // This command is never finished
   @Override
   protected boolean isFinished() {
     return false;
   }
 
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-  }
 }

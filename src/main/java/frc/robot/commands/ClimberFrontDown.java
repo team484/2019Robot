@@ -7,28 +7,18 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
-import frc.robot.subsystems.CargoSub;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.command.InstantCommand;
+import frc.robot.subsystems.ClimberSub;
 
 /**
- * Keeps cargo shooter motor off
+ * Retracts the front climber pistons to lower the robot
  */
-public class CargoDoNothing extends Command {
-  public CargoDoNothing() {
-    requires(Robot.cargoSub);
-  }
+public class ClimberFrontDown extends InstantCommand {
 
-  // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    CargoSub.set(0);
-  }
-
-  // This command is never finished
-  @Override
-  protected boolean isFinished() {
-    return false;
+    ClimberSub.setFront(Value.kReverse);
   }
 
 }

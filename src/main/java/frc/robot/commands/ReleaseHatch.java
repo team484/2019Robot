@@ -8,47 +8,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.subsystems.HatchSub;
 
-public class ReleaseHatch extends Command {
-  public ReleaseHatch() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+/**
+ * Releases the grip on the hatch panel
+ */
+public class ReleaseHatch extends InstantCommand {
 
-    requires(Robot.hatchSub);
-
-  }
-
-
-  // Called just before this Command runs the first time
-  @Override
-  protected void initialize() {
-  }
-
-  // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-
     HatchSub.setBottom(Value.kForward);
-
   }
 
-  // Make this return true when this Command no longer needs to run execute()
-  @Override
-  protected boolean isFinished() {
-    return true;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-  }
 }

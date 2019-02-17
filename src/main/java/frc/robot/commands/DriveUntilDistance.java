@@ -11,14 +11,16 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveSub;
 
+/**
+ * Drives at a set speed until a set distance is passed
+ */
 public class DriveUntilDistance extends Command {
   private double speed;
   private double distance;
+
   public DriveUntilDistance(double speed, double distance) {
     this.speed = speed;
     this.distance = distance;
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
     requires(Robot.driveSub);
   }
 
@@ -32,9 +34,7 @@ public class DriveUntilDistance extends Command {
   @Override
   protected void execute() {
     DriveSub.set(speed, 0);
-    
 
-     
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -49,10 +49,4 @@ public class DriveUntilDistance extends Command {
     DriveSub.set(0, 0);
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
 }

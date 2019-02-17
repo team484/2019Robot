@@ -12,29 +12,26 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotIO;
 
 /**
- * Add your docs here.
+ * Subsystem for the hatch panel manipulator
  */
 public class HatchSub extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
   }
 
   public static void setTop(Value v) {
-
+    if (RobotIO.topHatchSolenoid == null) {
+      return;
+    }
     RobotIO.topHatchSolenoid.set(v);
-
   }
 
   public static void setBottom(Value v) {
-
+    if (RobotIO.bottomHatchSolenoid == null) {
+      return;
+    }
     RobotIO.bottomHatchSolenoid.set(v);
-
   }
-
 
 }

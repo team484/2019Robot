@@ -7,7 +7,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -18,6 +17,9 @@ import frc.robot.Robot;
 import frc.robot.RobotIO;
 import frc.robot.subsystems.ElevatorSub;
 
+/**
+ * Uses the operator joystick to control the elevator height
+ */
 public class JoystickElevator extends Command {
   PIDSource pidSource = new PIDSource() {
 
@@ -41,11 +43,15 @@ public class JoystickElevator extends Command {
 
     @Override
     public void pidWrite(double output) {
-      ElevatorSub.set(output);
+      if (pid.getSetpoint() > 2) {
+        ElevatorSub.set(output);
+      } else {
+        ElevatorSub.set(0);
+      }
     }
   };
 
-  PIDController pid = new PIDController(0.1, 0.0, 0.0, pidSource, pidOutput, 0.1);
+  PIDController pid = new PIDController(0.02, 0.0, 0.0, pidSource, pidOutput, 0.1);
 
   private int commandState = 0; // 0 = JoystickCtrl 1 = No Joystick, but not stationary 2 = Stationary/PID
                                 // control
@@ -61,7 +67,7 @@ public class JoystickElevator extends Command {
   protected void initialize() {
     commandState = 0;
     lastRate = ElevatorSub.getRate();
-    pid.setOutputRange(-2.0, 2.0);
+    pid.setOutputRange(-0.3, 0.3);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -70,21 +76,23 @@ public class JoystickElevator extends Command {
     SmartDashboard.putNumber("ElevState", commandState);
     double newRate = ElevatorSub.getRate();
     double operatorInput = RobotIO.operatorStick.getY();
-    if (Math.abs(operatorInput) > 0.06 || DriverStation.getInstance().isDisabled()) {
+    if (Math.abs(operatorInput) > 0.08) {
       commandState = 0;
       pid.disable();
     }
 
     switch (commandState) {
     case 0:
-      ElevatorSub.set(operatorInput * 8.0);
-      if (Math.abs(operatorInput) < 0.06) {
+      pid.disable();
+      ElevatorSub.set(operatorInput, true);
+      if (Math.abs(operatorInput) < 0.08) {
         commandState = 1;
       }
       break;
 
     case 1:
-      if (newRate == 0) {
+      ElevatorSub.set(operatorInput, true);
+      if (Math.abs(newRate) < 1) {
         pid.setSetpoint(ElevatorSub.getHeight());
         pid.reset();
         pid.enable();
@@ -110,7 +118,6 @@ public class JoystickElevator extends Command {
         if (pid.isEnabled()) {
           pid.disable();
         }
-        ElevatorSub.set(0);
       }
     default:
       break;
@@ -119,21 +126,16 @@ public class JoystickElevator extends Command {
 
   }
 
-  // Make this return true when this Command no longer needs to run execute()
+  // This command is never finished
   @Override
   protected boolean isFinished() {
     return false;
   }
 
-  // Called once after isFinished returns true
+  // Called once after command is interrupted
   @Override
   protected void end() {
+    ElevatorSub.set(0);
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
 }

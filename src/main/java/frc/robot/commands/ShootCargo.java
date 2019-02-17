@@ -9,42 +9,49 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.RobotSettings;
 import frc.robot.subsystems.CargoSub;
 
+/**
+ * Spins the cargo shooter
+ */
 public class ShootCargo extends Command {
-  public ShootCargo() {
-    // Use requires() here to declare subsystem dependencies
+  private double speed;
+  private boolean ramp;
+  private double i = 0.0;
+
+  public ShootCargo(double speed, boolean ramp) {
     requires(Robot.cargoSub);
+    this.speed = speed;
+    this.ramp = ramp;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    i = 0.0;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-      CargoSub.set(RobotSettings.CARGO_SHOOT_SPEED);
+    if (i < speed && ramp) {
+      CargoSub.set(i);
+      i += 0.01;
+      return;
+    }
+    CargoSub.set(speed);
   }
 
-  // Make this return true when this Command no longer needs to run execute()
+  // This command never finishes. Interrupt it to end it.
   @Override
   protected boolean isFinished() {
     return false;
   }
 
-  // Called once after isFinished returns true
+  // Called once after command is interrupted
   @Override
   protected void end() {
     CargoSub.set(0);
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
 }
