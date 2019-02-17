@@ -7,28 +7,20 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import frc.robot.subsystems.HatchSub;
 
 /**
- * Releases the grip on the hatch panel
+ * Set if the robot is currently at a rocket ship or cargo ship
  */
-public class ReleaseHatch extends InstantCommand {
-  private boolean checkForRocket = false;
-
-  public ReleaseHatch() {
-    checkForRocket = false;
+public class SetRocketOrCargo extends InstantCommand {
+  public static boolean atRocket = false;
+  private boolean valueToSet;
+  public SetRocketOrCargo(boolean atRocket) {
+    valueToSet = atRocket;
   }
 
-  public ReleaseHatch(boolean onlyIfAtRocket) {
-    checkForRocket = onlyIfAtRocket;
-  }
   @Override
-  protected void execute() {
-    if (!checkForRocket || SetRocketOrCargo.atRocket) {
-      HatchSub.setBottom(Value.kForward);
-    }
+  public void execute() {
+    SetRocketOrCargo.atRocket = valueToSet;
   }
-
 }

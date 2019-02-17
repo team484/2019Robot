@@ -65,7 +65,8 @@ public class RobotIO {
 
     /*-----Misc-----*/
     public static Joystick driverStick;
-    public static Joystick operatorStick;
+    public static Joystick hatchStick;
+    public static Joystick cargoStick;
     public static PigeonIMU imu;
     public static Compressor compressor;
     public static PowerDistributionPanel pdp;
@@ -132,8 +133,8 @@ public class RobotIO {
         /*-----Elevator-----*/
         elevatorMotorLeft = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_LEFT_ID, MotorType.kBrushless);
         elevatorMotorLeft.setSmartCurrentLimit(80);
-        elevatorMotorLeft.setOpenLoopRampRate(1.5);
-        elevatorMotorLeft.setClosedLoopRampRate(1.5);
+        elevatorMotorLeft.setOpenLoopRampRate(1.0);
+        elevatorMotorLeft.setClosedLoopRampRate(1.0);
         elevatorMotorLeft.enableVoltageCompensation(10);
         if (elevatorMotorLeft.setEncPosition(0) != CANError.kOK) {
             errors.add("Error with left elevator motor");
@@ -141,8 +142,8 @@ public class RobotIO {
 
         elevatorMotorRight = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_RIGHT_ID, MotorType.kBrushless);
         elevatorMotorRight.setSmartCurrentLimit(80);
-        elevatorMotorRight.setOpenLoopRampRate(1.5);
-        elevatorMotorRight.setClosedLoopRampRate(1.5);
+        elevatorMotorRight.setOpenLoopRampRate(1.0);
+        elevatorMotorRight.setClosedLoopRampRate(1.0);
         elevatorMotorRight.enableVoltageCompensation(10);
         elevatorMotorRight.getEncoder().setPosition(0);
         if (elevatorMotorRight.setEncPosition(0) != CANError.kOK) {
@@ -163,7 +164,8 @@ public class RobotIO {
 
         /*-----Misc-----*/
         driverStick = new Joystick(RobotSettings.DRIVER_STICK_PORT);
-        operatorStick = new Joystick(RobotSettings.OPERATOR_STICK_PORT);
+        hatchStick = new Joystick(RobotSettings.HATCH_STICK_PORT);
+        cargoStick = new Joystick(RobotSettings.CARGO_STICK_PORT);
         imu = new PigeonIMU(cargoMotor);
         compressor = new Compressor();
         pdp = new PowerDistributionPanel();

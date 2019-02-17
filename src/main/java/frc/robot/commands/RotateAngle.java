@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
@@ -45,7 +46,7 @@ public class RotateAngle extends Command {
 
 				@Override
 				public void pidWrite(double output) {
-					DriveSub.set(0, -output);
+					DriveSub.set(0, output);
 				}
 			}, RobotSettings.ROTATE_PID_UPDATE_RATE);
 	private double setpoint;
@@ -53,7 +54,7 @@ public class RotateAngle extends Command {
 	public RotateAngle(double angle) {
 		requires(Robot.driveSub);
 		setpoint = angle;
-		pid.setOutputRange(-1.0, 1.0);
+		pid.setOutputRange(-0.5, 0.5);
 		requires(Robot.driveSub);
 	}
 
@@ -68,6 +69,11 @@ public class RotateAngle extends Command {
 		pid.setSetpoint(setpoint + ypr[0]);
 		pid.setAbsoluteTolerance(RobotSettings.ROTATE_PID_TOLERANCE);
 		pid.enable();
+	}
+
+	@Override
+	public void execute() {
+		SmartDashboard.putNumber("RotateError", pid.getError());
 	}
 
 	protected boolean isFinished() {

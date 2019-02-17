@@ -75,7 +75,9 @@ public class JoystickElevator extends Command {
   protected void execute() {
     SmartDashboard.putNumber("ElevState", commandState);
     double newRate = ElevatorSub.getRate();
-    double operatorInput = RobotIO.operatorStick.getY();
+    double operatorInput1 = RobotIO.hatchStick.getY();
+    double operatorInput2 = RobotIO.cargoStick.getY();
+    double operatorInput = Math.abs(operatorInput1) > Math.abs(operatorInput2) ? operatorInput1 : operatorInput2;
     if (Math.abs(operatorInput) > 0.08) {
       commandState = 0;
       pid.disable();

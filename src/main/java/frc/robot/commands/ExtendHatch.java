@@ -15,10 +15,20 @@ import frc.robot.subsystems.HatchSub;
  * Extends the hatch grabber
  */
 public class ExtendHatch extends InstantCommand {
+  private boolean checkForRocket = false;
+  public ExtendHatch() {
+    checkForRocket = false;
+  }
+
+  public ExtendHatch(boolean onlyIfAtRocket) {
+    checkForRocket = onlyIfAtRocket;
+  }
 
   @Override
   protected void execute() {
-    HatchSub.setTop(Value.kForward);
+    if (!checkForRocket || SetRocketOrCargo.atRocket) {
+      HatchSub.setTop(Value.kForward);
+    }
   }
 
 }

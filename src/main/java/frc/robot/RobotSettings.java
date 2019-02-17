@@ -38,13 +38,14 @@ public class RobotSettings {
 
     /*-----Joystick Ports-----*/
     public static final int DRIVER_STICK_PORT = 0;
-    public static final int OPERATOR_STICK_PORT = 1;
+    public static final int HATCH_STICK_PORT = 1;
+    public static final int CARGO_STICK_PORT = 2;
 
     /*-----PCM Ports-----*/
-    public static final int TOP_SOLENOID_PORT_1 = 2;
-    public static final int TOP_SOLENOID_PORT_2 = 3;
-    public static final int BOTTOM_SOLENOID_PORT_1 = 0;
-    public static final int BOTTOM_SOLENOID_PORT_2 = 1;
+    public static final int TOP_SOLENOID_PORT_1 = 3;
+    public static final int TOP_SOLENOID_PORT_2 = 2;
+    public static final int BOTTOM_SOLENOID_PORT_1 = 1;
+    public static final int BOTTOM_SOLENOID_PORT_2 = 0;
 
     public static final int ARM_SOLENOID_PORT_1 = 0;
     public static final int ARM_SOLENOID_PORT_2 = 1;
@@ -82,7 +83,7 @@ public class RobotSettings {
 
     public static final double ROTATE_ANGLE_KP = 0.06;
     public static final double ROTATE_ANGLE_KI = 0;
-    public static final double ROTATE_ANGLE_KD = 0.6;
+    public static final double ROTATE_ANGLE_KD = 0.1;
     public static final double ROTATE_PID_UPDATE_RATE = 0.01;
     public static final double ROTATE_PID_TOLERANCE = 0;
 
@@ -119,18 +120,21 @@ public class RobotSettings {
     public static final double ELEVATOR_SPEED_MULTIPLYER = 0.8;
     public static final double ELEVATOR_UP_KP = 0.06;
     public static final double ELEVATOR_UP_KI = 0;
-    public static final double ELEVATOR_UP_KD = 1.5;
-    public static final double ELEVATOR_DOWN_KP = 0.1;
+    public static final double ELEVATOR_UP_KD = 2;
+    public static final double ELEVATOR_DOWN_KP = 0.06;
     public static final double ELEVATOR_DOWN_KI = 0;
-    public static final double ELEVATOR_DOWN_KD = 0;
+    public static final double ELEVATOR_DOWN_KD = 2;
     public static final double ELEVATOR_GRAVITY_COMP = 0.05;
     public static final double ELEVATOR_MAX_DECEL_RATE = 2.7; // 1/seconds
 
     public static final double ELEVATOR_HATCH_PICKUP = 5.0;
-    public static final double ELEVATOR_HATCH_PICKUP_RAISED = 9;
+    public static final double ELEVATOR_HATCH_PICKUP_RAISED = 11;
     public static final double ELEVATOR_HATCH_LEVEL_1 = 8;
     public static final double ELEVATOR_HATCH_LEVEL_2 = 35.5;
     public static final double ELEVATOR_HATCH_LEVEL_3 = 64;
+
+    public static final double ELEVATOR_CARGO_SHIP = 20;
+    public static final double ELEVATOR_CARGO_OFFSET = -2;
 
     /*-----Hatch Vars-----*/
 

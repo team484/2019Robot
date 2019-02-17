@@ -33,7 +33,7 @@ public class ElevatorSub extends Subsystem {
     }
     double height = getHeight();
     double rate = getRate();
-    if (getHeight() < 2 && speed < 0.08) {
+    if ((getHeight() < 2 && speed < 0.08) || (height >= RobotSettings.ELEVATOR_UP_THRESHOLD && speed > -0.08)) {
       RobotIO.elevatorMotorLeft.set(0);
       RobotIO.elevatorMotorRight.set(0);
       return;
