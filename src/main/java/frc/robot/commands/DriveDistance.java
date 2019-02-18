@@ -92,6 +92,7 @@ public class DriveDistance extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		DriveSub.setVoltageCompensation(true);
 		speed = speedMultiplier;
 		if (RobotIO.leftEncoder != null) {
 			RobotIO.leftEncoder.reset();
@@ -129,6 +130,7 @@ public class DriveDistance extends Command {
 	protected void end() {
 		pid.disable();
 		pid2.disable();
+		DriveSub.setVoltageCompensation(false);
 		DriveSub.set(0, 0);
 	}
 }

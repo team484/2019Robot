@@ -21,7 +21,7 @@ import frc.robot.subsystems.ElevatorSub;
  * Raises/lowers the elevator to the specified height
  */
 public class ElevateToHeight extends Command {
-
+  public static boolean isElevating = false;
   private static PIDController pid = new PIDController(RobotSettings.ELEVATOR_UP_KP, RobotSettings.ELEVATOR_UP_KI,
       RobotSettings.ELEVATOR_UP_KD, new PIDSource() {
 
@@ -57,6 +57,7 @@ public class ElevateToHeight extends Command {
   }
 
   protected void initialize() {
+    ElevateToHeight.isElevating = true;
     if (pid == null)
       return;
     if (setpoint > ElevatorSub.getHeight()) {
@@ -72,10 +73,11 @@ public class ElevateToHeight extends Command {
   }
 
   protected boolean isFinished() {
-    return Math.abs(ElevatorSub.getHeight() - setpoint) < 1.5 && ElevatorSub.getRate() < 1;
+    return Math.abs(ElevatorSub.getHeight() - setpoint) < 1.5 && ElevatorSub.getRate() < 1.5;
   }
 
   protected void end() {
+    ElevateToHeight.isElevating = false;
     if (pid != null) {
       pid.disable();
     }

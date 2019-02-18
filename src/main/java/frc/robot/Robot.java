@@ -21,6 +21,7 @@ import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.JoystickElevator;
 import frc.robot.subsystems.CargoSub;
@@ -29,6 +30,8 @@ import frc.robot.subsystems.DriveSub;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.HatchSub;
 import frc.robot.subsystems.IntakeSub;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Waypoint;
 
 public class Robot extends TimedRobot {
   public static final RobotIO robotIO = new RobotIO();
@@ -51,6 +54,9 @@ public class Robot extends TimedRobot {
   public static boolean targetFound = false; // If robot can see a vision target
 
   public static OI oi;
+  private static Command autonCommand;
+	private static SendableChooser<Integer> position = new SendableChooser<>();
+	private static SendableChooser<Command> auton = new SendableChooser<>();
 
   @Override
   public void robotInit() {
@@ -58,14 +64,24 @@ public class Robot extends TimedRobot {
     oi = new OI();
     oi.setupOI();
     enableCameraServer();
+    position.addOption("Left L2 (1)", 1);
+    position.addOption("Left (2)", 2);
+    position.addOption("Center (3)", 3);
+    position.addOption("Right L2 (4)", 4);
+    position.addOption("Right (5)", 5);
+    updateChooser();
+    GenerateTrajectory.forceRegen = true;
+    GenerateTrajectory.execute("L2ToShipFront",
+      new Waypoint(119, 18.75, Pathfinder.d2r(90)),
+      new Waypoint(150.125, 190, Pathfinder.d2r(90)));
   }
 
   @Override
   public void robotPeriodic() {
     SmartDashboard.putNumber("Elevator Height", ElevatorSub.getHeight());
     double[] ypr = new double[3];
-    RobotIO.imu.getYawPitchRoll(ypr);
     SmartDashboard.putNumber("Gyro", ypr[0]);
+    updateChooser();
   }
 
   @Override
@@ -80,16 +96,34 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    autonCommand = auton.getSelected();
+    if (autonCommand == null) {
+      return;
+    }
     RobotIO.compressor.stop(); // disable compressor in auto to reduce variability
+    autonCommand.start();
   }
 
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
+    if (autonCommand != null && autonCommand.isCompleted()) {
+      RobotIO.compressor.start();
+    }
+    if (Math.abs(RobotIO.driverStick.getMagnitude()) > 0.5
+      || Math.abs(RobotIO.hatchStick.getMagnitude()) > 0.5
+      || Math.abs(RobotIO.cargoStick.getMagnitude()) > 0.5) {
+        if (autonCommand != null && autonCommand.isRunning()) {
+          autonCommand.cancel();
+        }
+      }
   }
 
   @Override
   public void teleopInit() {
+    if (autonCommand != null && autonCommand.isRunning()) {
+      autonCommand.cancel();
+    }
     RobotIO.compressor.start();
     Command elevatorCmd = new JoystickElevator();
     elevatorCmd.start();
@@ -105,6 +139,35 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
+  private static int oldPos = -1;
+  private static void updateChooser() {
+    if (position.getSelected() == null) {
+      return;
+    }
+    int newPos = position.getSelected();
+    if (oldPos == newPos) {
+      return;
+    }
+    oldPos = newPos;
+    SmartDashboard.delete("Auton");
+    auton = new SendableChooser<Command>();
+    auton.addOption("Do Nothing", null);
+    switch(newPos) {
+      case 1: //Left L2
+        break;
+      case 2: //Left
+        break;
+      case 3: //Center
+        break;
+      case 4: //Right L2
+        break;
+      case 5: //Right
+        break;
+      default:
+      break;
+    }
+    SmartDashboard.putData("Auton", auton);
+  }
   private void enableCameraServer() {
     if (isCameraServerUp)
       return;
@@ -252,9 +315,9 @@ public class Robot extends TimedRobot {
           // Calculate target location in real space
           double anglePerInch = ppi * RobotSettings.RADIANS_PER_PIXEL;
           distance = 1.0 / Math.tan(anglePerInch) - 15.5;
-          angleX = (imgCenterX - targetX) * RobotSettings.RADIANS_PER_PIXEL;
+          angleX = -(imgCenterX - targetX) * RobotSettings.RADIANS_PER_PIXEL;
           angleXDeg = Math.toDegrees(angleX);
-          Robot.targetAngle = angleXDeg;
+          Robot.targetAngle = angleXDeg - 1.3;
           Robot.targetDistance = distance;
         }
         SmartDashboard.putNumber("Vision frame rate (ms)", System.currentTimeMillis() - Robot.lastVisionUpdateTime);

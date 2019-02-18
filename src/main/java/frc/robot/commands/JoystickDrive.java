@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotIO;
 import frc.robot.subsystems.DriveSub;
+import frc.robot.subsystems.ElevatorSub;
 
 /**
  * Uses driver joystick inputs to control the drivetrain
@@ -23,7 +24,12 @@ public class JoystickDrive extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    DriveSub.set(-RobotIO.driverStick.getY(), RobotIO.driverStick.getX());
+    double y = RobotIO.driverStick.getY();
+    if (ElevatorSub.getHeight() > 35) {
+      y /= 3.0;
+    }
+    double x = RobotIO.driverStick.getX() * 0.8;
+    DriveSub.set(-y * 0.7, x);
   }
 
   // This command is never finished

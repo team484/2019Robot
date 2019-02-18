@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
@@ -53,6 +54,7 @@ public class RobotIO {
     /*-----Elevator-----*/
     public static CANSparkMax elevatorMotorLeft;
     public static CANSparkMax elevatorMotorRight;
+    public static DigitalInput elevatorDownSwitch;
 
     /*-----Hatch-----*/
     public static DoubleSolenoid topHatchSolenoid;
@@ -149,6 +151,8 @@ public class RobotIO {
         if (elevatorMotorRight.setEncPosition(0) != CANError.kOK) {
             errors.add("Error with right elevator motor");
         }
+
+        elevatorDownSwitch = new DigitalInput(RobotSettings.ELEVATOR_DOWN_SWITCH_PORT);
 
         /*-----Hatch-----*/
         topHatchSolenoid = new DoubleSolenoid(RobotSettings.TOP_SOLENOID_PORT_1, RobotSettings.TOP_SOLENOID_PORT_2);

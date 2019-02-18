@@ -21,7 +21,7 @@ import frc.robot.subsystems.DriveSub;
 /**
  * Rotates the robot a set angle (in degrees)
  */
-public class RotateAngle extends Command {
+public class RotateToTarget extends Command {
 	private static PIDController pid = new PIDController(RobotSettings.ROTATE_ANGLE_KP, RobotSettings.ROTATE_ANGLE_KI,
 			RobotSettings.ROTATE_ANGLE_KD, new PIDSource() {
 
@@ -51,14 +51,15 @@ public class RotateAngle extends Command {
 			}, RobotSettings.ROTATE_PID_UPDATE_RATE);
 	private double setpoint;
 
-	public RotateAngle(double angle) {
+	public RotateToTarget() {
 		requires(Robot.driveSub);
-		setpoint = angle;
 		pid.setOutputRange(-0.5, 0.5);
 		requires(Robot.driveSub);
 	}
-
+	private boolean targetFound = true;
 	protected void initialize() {
+		setpoint = Robot.targetAngle;
+		targetFound = Robot.targetFound;
 		DriveSub.setVoltageCompensation(true);
 		double[] ypr = new double[3];
 		if (RobotIO.imu != null) {
@@ -71,14 +72,19 @@ public class RotateAngle extends Command {
 		pid.enable();
 	}
 
+	double lastYaw = 0;
 	protected boolean isFinished() {
+		double newHeading = DriveSub.getHeading();
+		if (!targetFound) {
+			return true;
+		}
 		if (pid == null)
 			return true;
-		if (setpoint < 0 && pid.getError() > 0)
+		if (Math.abs(pid.getError()) < 1 && Math.abs(newHeading - lastYaw) < 0.1) {
 			return true;
-		if (setpoint > 0 && pid.getError() < 0)
-			return true;
-		return pid.onTarget();
+		}
+		lastYaw = newHeading;
+		return false;
 	}
 
 	protected void end() {

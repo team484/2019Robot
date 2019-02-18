@@ -17,6 +17,7 @@ import frc.robot.subsystems.DriveSub;
 public class DriveUntilDistance extends Command {
   private double speed;
   private double distance;
+  private boolean onlyForCargo;
 
   public DriveUntilDistance(double speed, double distance) {
     this.speed = speed;
@@ -24,10 +25,18 @@ public class DriveUntilDistance extends Command {
     requires(Robot.driveSub);
   }
 
+  public DriveUntilDistance(double speed, double distance, boolean onlyForCargo) {
+    this.speed = speed;
+    this.distance = distance;
+    requires(Robot.driveSub);
+    this.onlyForCargo = onlyForCargo;
+
+  }
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
     DriveSub.resetDistance();
+    DriveSub.setVoltageCompensation(true);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -40,12 +49,16 @@ public class DriveUntilDistance extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
+    if (onlyForCargo && SetRocketOrCargo.atRocket) {
+      return true;
+    }
     return (DriveSub.getDistance() > distance && speed > 0) || (DriveSub.getDistance() < distance && speed < 0);
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    DriveSub.setVoltageCompensation(false);
     DriveSub.set(0, 0);
   }
 

@@ -78,6 +78,9 @@ public class JoystickElevator extends Command {
     double operatorInput1 = RobotIO.hatchStick.getY();
     double operatorInput2 = RobotIO.cargoStick.getY();
     double operatorInput = Math.abs(operatorInput1) > Math.abs(operatorInput2) ? operatorInput1 : operatorInput2;
+    if (Math.abs(operatorInput) < 0.1) {
+      operatorInput = 0;
+    }
     if (Math.abs(operatorInput) > 0.08) {
       commandState = 0;
       pid.disable();

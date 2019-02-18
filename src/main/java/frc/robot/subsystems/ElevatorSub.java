@@ -71,6 +71,11 @@ public class ElevatorSub extends Subsystem {
     if (right < 0) {
       RobotIO.elevatorMotorRight.setEncPosition(0);
     }
+    if (RobotIO.elevatorDownSwitch.get() == RobotSettings.ELEVATOR_SWITCH_DOWN_STATE) {
+      RobotIO.elevatorMotorLeft.setEncPosition(0);
+      RobotIO.elevatorMotorRight.setEncPosition(0);
+      return 0;
+    }
     if (left == 0 && right == 0) {
       return lastHeight;
     }

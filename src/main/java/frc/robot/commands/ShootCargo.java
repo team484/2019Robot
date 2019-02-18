@@ -34,6 +34,10 @@ public class ShootCargo extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if (ElevateToHeight.isElevating) {
+      CargoSub.set(0);
+      return;
+    }
     if (i < speed && ramp) {
       CargoSub.set(i);
       i += 0.01;

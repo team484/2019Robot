@@ -19,10 +19,11 @@ import frc.robot.commands.*;
 public class OI {
 
   /*-----Driver Stick-----*/
+  private static Button vision;
   private static Button lowerBack;
   private static Button raiseBack;
-  private static Button raiseFront;
-  private static Button lowerFront;
+  private static Button tapLeft;
+  private static Button tapRight;
   private static Button testButton;
 
   /*-----Hatch Stick-----*/
@@ -47,17 +48,19 @@ public class OI {
 
   public void setupOI() {
     /*-----Driver Stick-----*/
+    vision = new JoystickButton(RobotIO.driverStick, 1);
     lowerBack = new JoystickButton(RobotIO.driverStick, 2);
     raiseBack = new JoystickButton(RobotIO.driverStick, 3);
-    raiseFront = new JoystickButton(RobotIO.driverStick, 4);
-    lowerFront = new JoystickButton(RobotIO.driverStick, 5);
+    tapLeft = new JoystickButton(RobotIO.driverStick, 4);
+    tapRight = new JoystickButton(RobotIO.driverStick, 5);
     testButton = new JoystickButton(RobotIO.driverStick, 8);
+    vision.whenPressed(new GoToTarget());
     lowerBack.whenPressed(new ClimberBackDown());
     raiseBack.whenPressed(new ClimberBackUp());
-    raiseFront.whenPressed(new ClimberFrontUp());
-    lowerFront.whenPressed(new ClimberFrontDown());
+    tapLeft.whenPressed(new RotateAngle(-2));
+    tapRight.whenPressed(new RotateAngle(2));
 
-    testButton.whenPressed(new RotateAngle(10));
+    testButton.whenPressed(new DriveUsingTrajectory("L2ToShipFront"));
     /*-----Hatch Stick-----*/
     shootHatch = new JoystickButton(RobotIO.hatchStick, 1);
     pickupHatch = new JoystickButton(RobotIO.hatchStick, 2);
@@ -97,6 +100,7 @@ public class OI {
 
     shootCargo.whileHeld(new ShootCargo(RobotSettings.CARGO_SHOOT_SPEED, false));
     pickupCargo.whenPressed(new PickupCargo());
+    pickupCargo.whileHeld(new ElevateToHeight(0));
     pickupCargo.whenReleased(new CargoForwardUntilClear());
     pickupCargo.whenReleased(new IntakeDoNothing());
     pickupCargo.whenReleased(new RaiseIntake());

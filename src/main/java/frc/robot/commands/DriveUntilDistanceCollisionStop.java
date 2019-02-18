@@ -31,6 +31,7 @@ public class DriveUntilDistanceCollisionStop extends Command {
   protected void initialize() {
     DriveSub.resetDistance();
     i = 0;
+    DriveSub.setVoltageCompensation(true);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -51,6 +52,7 @@ public class DriveUntilDistanceCollisionStop extends Command {
   @Override
   protected void end() {
     DriveSub.set(0, 0);
+    DriveSub.setVoltageCompensation(false);
   }
 
 }
