@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotIO;
 import frc.robot.subsystems.DriveSub;
 
 /**
@@ -50,6 +51,9 @@ public class DriveUntilDistance extends Command {
   @Override
   protected boolean isFinished() {
     if (onlyForCargo && SetRocketOrCargo.atRocket) {
+      return true;
+    }
+    if (Math.abs(RobotIO.driverStick.getMagnitude()) > 0.2) {
       return true;
     }
     return (DriveSub.getDistance() > distance && speed > 0) || (DriveSub.getDistance() < distance && speed < 0);

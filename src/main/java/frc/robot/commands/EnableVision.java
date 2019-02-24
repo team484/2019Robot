@@ -7,36 +7,18 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.Robot;
-import frc.robot.subsystems.IntakeSub;
 
-/**
- * Spins the cargo intake wheels
- */
-public class SpinIntake extends Command {
-  private double speed;
-  public SpinIntake(double speed) {
-    this.speed = speed;
-    requires(Robot.intakeSub);
+public class EnableVision extends InstantCommand {
+  private boolean enable;
+  public EnableVision(boolean shouldEnable) {
+    this.enable = shouldEnable;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    IntakeSub.setSpeed(speed);
+    Robot.disableVision = !enable;
   }
-
-  // This command never finishes. Interrupt it to end it.
-  @Override
-  protected boolean isFinished() {
-    return false;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-    IntakeSub.setSpeed(0);
-  }
-
 }

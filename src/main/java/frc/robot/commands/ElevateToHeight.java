@@ -48,7 +48,6 @@ public class ElevateToHeight extends Command {
         }
       }, 0.01);
   private double setpoint;
-  private boolean isGoingUp = false;
 
   public ElevateToHeight(double height) {
     requires(Robot.elevatorSub);
@@ -61,10 +60,8 @@ public class ElevateToHeight extends Command {
     if (pid == null)
       return;
     if (setpoint > ElevatorSub.getHeight()) {
-      isGoingUp = true;
       pid.setPID(RobotSettings.ELEVATOR_UP_KP, RobotSettings.ELEVATOR_UP_KI, RobotSettings.ELEVATOR_UP_KD);
     } else {
-      isGoingUp = false;
       pid.setPID(RobotSettings.ELEVATOR_DOWN_KP, RobotSettings.ELEVATOR_DOWN_KI, RobotSettings.ELEVATOR_DOWN_KD);
     }
     pid.setSetpoint(setpoint);

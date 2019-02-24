@@ -46,7 +46,8 @@ public class Robot extends TimedRobot {
 
   /*-----Camera/vision vars-----*/
   private static boolean isCameraServerUp = false;
-  public static boolean disableVision = false;
+  public static boolean disableVision = true;
+  public static boolean visionUpToDate = false;
   VisionThread visionThread;
   public static long lastVisionUpdateTime;
   public static double targetAngle = 0.0; // The angle the robot must turn to face the target
@@ -188,8 +189,13 @@ public class Robot extends TimedRobot {
 
       // -----Computer Vision Thread-----
       visionThread = new VisionThread(visionCamera, new TargetVisionPipeline(), pipeline -> {
-        if (disableVision || (pipeline.filterContoursOutput().isEmpty()))
+        if (Robot.disableVision || (pipeline.filterContoursOutput().isEmpty())) {
+          targetFound = false;
+          targetDistance = 0;
+          targetAngle = 0;
+          Robot.visionUpToDate = !Robot.disableVision;
           return;
+        }
         ArrayList<VisionTapeResult> lRects = new ArrayList<>(); // used for dev stream
         ArrayList<VisionTapeResult> rRects = new ArrayList<>(); // used for dev stream
         double imgCenterX = RobotSettings.IMG_WIDTH / 2.0;
@@ -319,9 +325,13 @@ public class Robot extends TimedRobot {
           angleXDeg = Math.toDegrees(angleX);
           Robot.targetAngle = angleXDeg - 1.3;
           Robot.targetDistance = distance;
+        } else {
+          Robot.targetDistance = 0;
+          Robot.targetAngle = 0;
         }
-        SmartDashboard.putNumber("Vision frame rate (ms)", System.currentTimeMillis() - Robot.lastVisionUpdateTime);
         Robot.targetFound = targetFound;
+        Robot.visionUpToDate = true;
+        SmartDashboard.putNumber("Vision frame rate (ms)", System.currentTimeMillis() - Robot.lastVisionUpdateTime);
         Robot.lastVisionUpdateTime = System.currentTimeMillis();
         SmartDashboard.putNumber("distance", distance);
         SmartDashboard.putNumber("angleDeg", angleXDeg);

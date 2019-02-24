@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
@@ -79,8 +78,11 @@ private static PIDController pid = new PIDController(RobotSettings.MAINTAIN_ANGL
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if (Math.abs(RobotIO.driverStick.getMagnitude()) > 0.3) {
+    if (Math.abs(RobotIO.driverStick.getMagnitude()) > 0.2) {
       return true;
+    }
+    if (Robot.targetDistance < distance && Robot.targetFound) {
+      //return true;
     }
     return speed <= 2 && i >= 50;
   }

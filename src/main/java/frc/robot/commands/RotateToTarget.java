@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
@@ -46,7 +45,11 @@ public class RotateToTarget extends Command {
 
 				@Override
 				public void pidWrite(double output) {
-					DriveSub.set(0, output);
+					if (output > 0) {
+						DriveSub.set(0, output + 0.1);
+					} else {
+						DriveSub.set(0, output - 0.1);
+					}
 				}
 			}, RobotSettings.ROTATE_PID_UPDATE_RATE);
 	private double setpoint;

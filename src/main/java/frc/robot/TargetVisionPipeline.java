@@ -48,6 +48,9 @@ public class TargetVisionPipeline implements VisionPipeline {
 	 */
     @Override
     public void process(Mat source0) {
+		if (Robot.disableVision) {
+			return;
+		}
 		// Step HSV_Threshold:
 		hsvThresholdInput = source0;
 

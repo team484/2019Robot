@@ -45,7 +45,7 @@ public class DriveUntilDistanceCollisionStop extends Command {
   @Override
   protected boolean isFinished() {
     System.out.println(speed);
-    return DriveSub.getDistance() > distance || (speed <= 0.4 && i >= 25);
+    return DriveSub.getDistance() > distance || (speed <= 1 && i >= 25);
   }
 
   // Called once after isFinished returns true

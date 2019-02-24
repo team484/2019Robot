@@ -60,6 +60,7 @@ public class DriveUsingTrajectory extends Command {
 	 */
 	protected void initialize() {
 		DriveSub.setVoltageCompensation(true);
+		try {
 		File leftTrajectoryFile = new File(SAVE_DIR + name + "/LeftTrajectory.traj");
 		Trajectory leftTrajectory = Pathfinder.readFromFile(leftTrajectoryFile);
 		File rightTrajectoryFile = new File(SAVE_DIR + name + "/RightTrajectory.traj");
@@ -70,7 +71,9 @@ public class DriveUsingTrajectory extends Command {
 		left.configurePIDVA(KP, KI, KD, VELOCITY_RATIO, ACCELERATION_GAIN);
 		right.configureEncoder(0, RIGHT_ENC_TIC_PER_ROT, WHEEL_DIAMETER);
 		right.configurePIDVA(KP, KI, KD, VELOCITY_RATIO, ACCELERATION_GAIN);
-
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		DriveSub.resetDistance();
 		startHeading = DriveSub.getHeading();
 	}
@@ -80,6 +83,9 @@ public class DriveUsingTrajectory extends Command {
 	 * output based on EncoderFollowers and heading error.
 	 */
 	protected void execute() {
+		if (left == null || right == null) {
+			return;
+		}
 		double outputL = left.calculate((int) (1000 * DriveSub.getLeftDistance()));
 		double outputR = right.calculate((int) (1000 * DriveSub.getRightDistance()));
 		double actualHeading = -DriveSub.getHeading() + startHeading + 90.0;
@@ -93,6 +99,9 @@ public class DriveUsingTrajectory extends Command {
 
 	// Command is finished when both trajectories have been completed
 	protected boolean isFinished() {
+		if (left == null || right == null) {
+			return true;
+		}
 		return left.isFinished() && right.isFinished();
 	}
 

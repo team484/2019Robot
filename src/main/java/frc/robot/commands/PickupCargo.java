@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+import frc.robot.RobotSettings;
 
 /**
  * Picks up the cargo from the ground and loads it into the shooter
@@ -17,9 +18,10 @@ public class PickupCargo extends CommandGroup {
 
   public PickupCargo() {
     addParallel(new LowerIntake());
-    addParallel(new SpinIntake());
+    addParallel(new SpinIntake(RobotSettings.INTAKE_MOTOR_SPEED));
     addSequential(new WaitForCargoInIntake());
     addParallel(new RaiseIntake());
+    addParallel(new SpinIntake(RobotSettings.INTAKE_MOTOR_SPEED/2.0));
     addParallel(new ShootCargo(0.6, false));
     addSequential(new WaitForCargoInShooter());
     addParallel(new IntakeDoNothing());
