@@ -18,8 +18,8 @@ public class ShootHatch extends CommandGroup {
     addParallel(new DriveUntilDistance(0.4, 10),0.5);
     addSequential(new ReleaseHatch());
     addSequential(new ExtendHatch(true));
-    addSequential(new WaitCommand(0.5));
-    addParallel(new DriveUntilDistance(-0.3, -0.2, true));
+    addSequential(new WaitCommand(0.3));
+    addSequential(new DriveUntilDistance(-0.3, -0.2, true));
     addSequential(new LowerElevator());
     addSequential(new RetractHatch());
     addSequential(new DriveUntilDistance(-0.3, -3));

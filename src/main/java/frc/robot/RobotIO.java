@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -86,6 +87,8 @@ public class RobotIO {
                 RobotSettings.CLIMBER_SOLENOID_PORT_2);
         climberFrontSolenoid = new DoubleSolenoid(RobotSettings.CLIMBER_SOLENOID_FRONT_PORT_1,
                 RobotSettings.CLIMBER_SOLENOID_FRONT_PORT_2);
+        climberBackSolenoid.set(Value.kReverse);
+        climberFrontSolenoid.set(Value.kReverse);
 
         /*-----Drivetrain-----*/
         leftMotor1 = new CANSparkMax(RobotSettings.LEFT_MOTOR_1_ID, MotorType.kBrushless);
@@ -158,13 +161,15 @@ public class RobotIO {
         topHatchSolenoid = new DoubleSolenoid(RobotSettings.TOP_SOLENOID_PORT_1, RobotSettings.TOP_SOLENOID_PORT_2);
         bottomHatchSolenoid = new DoubleSolenoid(RobotSettings.BOTTOM_SOLENOID_PORT_1,
                 RobotSettings.BOTTOM_SOLENOID_PORT_2);
-
+        topHatchSolenoid.set(Value.kReverse);
+        bottomHatchSolenoid.set(Value.kReverse);
         /*-----Intake-----*/
         intakeMotor = new WPI_TalonSRX(RobotSettings.CARGO_MOTOR_ID);
         intakeMotor.configVoltageCompSaturation(12);
         intakeMotor.enableVoltageCompensation(true);
         intakeSolenoid = new DoubleSolenoid(1, RobotSettings.ARM_SOLENOID_PORT_1, RobotSettings.ARM_SOLENOID_PORT_2);
         intakeSensor = new AnalogInput(RobotSettings.CARGO_INTAKE_SENSOR_PORT);
+        intakeSolenoid.set(Value.kForward);
 
         /*-----Misc-----*/
         driverStick = new Joystick(RobotSettings.DRIVER_STICK_PORT);

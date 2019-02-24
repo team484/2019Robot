@@ -20,11 +20,22 @@ public class ClimberSub extends Subsystem {
   public void initDefaultCommand() {
   }
 
-  public static void set(Value direction) {
+  public static void setBack(Value direction) {
     if (RobotIO.climberBackSolenoid == null) {
       return;
     }
     RobotIO.climberBackSolenoid.set(direction);
+  }
+
+  public static void toggleBack() {
+    if (RobotIO.climberBackSolenoid == null) {
+      return;
+    }
+    if (RobotIO.climberBackSolenoid.get() == Value.kReverse) {
+      RobotIO.climberBackSolenoid.set(Value.kForward);
+    } else {
+      RobotIO.climberBackSolenoid.set(Value.kReverse);
+    }
   }
 
   public static void setFront(Value direction) {
@@ -32,5 +43,16 @@ public class ClimberSub extends Subsystem {
       return;
     }
     RobotIO.climberFrontSolenoid.set(direction);
+  }
+
+  public static void toggleFront() {
+    if (RobotIO.climberFrontSolenoid == null) {
+      return;
+    }
+    if (RobotIO.climberFrontSolenoid.get() == Value.kReverse) {
+      RobotIO.climberFrontSolenoid.set(Value.kForward);
+    } else {
+      RobotIO.climberFrontSolenoid.set(Value.kReverse);
+    }
   }
 }

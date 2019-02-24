@@ -7,18 +7,16 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.subsystems.ClimberSub;
 
 /**
- * Retracts the rear climber pistons to lower the robot
+ * Extends the rear climber pistons to raise the robot.
  */
-public class ClimberBackDown extends InstantCommand {
+public class ClimberBackToggle extends InstantCommand {
 
   @Override
   protected void execute() {
-    ClimberSub.set(Value.kReverse);
+    ClimberSub.toggleBack();
   }
-
 }

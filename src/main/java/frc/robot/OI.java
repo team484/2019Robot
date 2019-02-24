@@ -19,8 +19,8 @@ public class OI {
 
   /*-----Driver Stick-----*/
   private static Button vision;
-  private static Button lowerBack;
-  private static Button raiseBack;
+  private static Button toggleBack;
+  private static Button toggleFront;
   private static Button tapLeft;
   private static Button tapRight;
   private static Button testButton;
@@ -48,14 +48,14 @@ public class OI {
   public void setupOI() {
     /*-----Driver Stick-----*/
     vision = new JoystickButton(RobotIO.driverStick, 1);
-    lowerBack = new JoystickButton(RobotIO.driverStick, 2);
-    raiseBack = new JoystickButton(RobotIO.driverStick, 3);
+    toggleBack = new JoystickButton(RobotIO.driverStick, 2);
+    toggleFront = new JoystickButton(RobotIO.driverStick, 3);
     tapLeft = new JoystickButton(RobotIO.driverStick, 4);
     tapRight = new JoystickButton(RobotIO.driverStick, 5);
     testButton = new JoystickButton(RobotIO.driverStick, 8);
     vision.whenPressed(new GoToTarget());
-    lowerBack.whenPressed(new ClimberBackDown());
-    raiseBack.whenPressed(new ClimberBackUp());
+    toggleBack.whenPressed(new ClimberBackToggle());
+    toggleFront.whenPressed(new ClimberFrontToggle());
     tapLeft.whenPressed(new RotateAngle(-2));
     tapRight.whenPressed(new RotateAngle(2));
 

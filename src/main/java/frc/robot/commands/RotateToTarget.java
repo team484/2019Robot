@@ -83,7 +83,7 @@ public class RotateToTarget extends Command {
 		}
 		if (pid == null)
 			return true;
-		if (Math.abs(pid.getError()) < 1 && Math.abs(newHeading - lastYaw) < 0.1) {
+		if (Math.abs(pid.getError()) < 1.4 && Math.abs(newHeading - lastYaw) < 0.13) {
 			return true;
 		}
 		lastYaw = newHeading;

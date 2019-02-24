@@ -50,10 +50,10 @@ public class RobotSettings {
 
     public static final int ARM_SOLENOID_PORT_1 = 0;
     public static final int ARM_SOLENOID_PORT_2 = 1;
-    public static final int CLIMBER_SOLENOID_PORT_1 = 2;
-    public static final int CLIMBER_SOLENOID_PORT_2 = 3;
-    public static final int CLIMBER_SOLENOID_FRONT_PORT_1 = 4;
-    public static final int CLIMBER_SOLENOID_FRONT_PORT_2 = 5;
+    public static final int CLIMBER_SOLENOID_PORT_1 = 3;
+    public static final int CLIMBER_SOLENOID_PORT_2 = 2;
+    public static final int CLIMBER_SOLENOID_FRONT_PORT_1 = 5;
+    public static final int CLIMBER_SOLENOID_FRONT_PORT_2 = 4;
 
     /*-----Cargo Vars-----*/
     public static final double CARGO_SHOOT_SPEED = 0.8;
@@ -126,7 +126,7 @@ public class RobotSettings {
     public static final double ELEVATOR_DOWN_KI = 0;
     public static final double ELEVATOR_DOWN_KD = 2;
     public static final double ELEVATOR_GRAVITY_COMP = 0.05;
-    public static final double ELEVATOR_MAX_DECEL_RATE = 2.7; // 1/seconds
+    public static final double ELEVATOR_MAX_DECEL_RATE = 2.4; // 1/seconds
     public static final boolean ELEVATOR_SWITCH_DOWN_STATE = false;
 
     public static final double ELEVATOR_HATCH_PICKUP = 5.0;

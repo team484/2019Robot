@@ -7,18 +7,17 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.subsystems.ClimberSub;
 
 /**
  * Extends the front climber pistons to raise the robot
  */
-public class ClimberFrontUp extends InstantCommand {
+public class ClimberFrontToggle extends InstantCommand {
 
   @Override
   protected void execute() {
-    ClimberSub.setFront(Value.kForward);
+    ClimberSub.toggleFront();
   }
 
 }

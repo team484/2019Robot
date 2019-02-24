@@ -32,7 +32,7 @@ public class LowerElevator extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return ElevatorSub.getHeight() < startHeight - 1.75;
+    return ElevatorSub.getHeight() < startHeight - 1.6;
   }
 
   // Called once after isFinished returns true
