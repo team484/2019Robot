@@ -10,9 +10,11 @@ package frc.robot.commands;
 import java.io.File;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotSettings;
 import frc.robot.subsystems.DriveSub;
+import frc.robot.subsystems.LEDSub;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.followers.EncoderFollower;
@@ -59,7 +61,8 @@ public class DriveUsingTrajectory extends Command {
 	 * Resets the encoders and loads the trajectories from disk.
 	 */
 	protected void initialize() {
-		DriveSub.setVoltageCompensation(true);
+		LEDSub.actionsInProgress++;
+		DriveSub.setVoltageCompensation(true, RobotSettings.VOLTAGE_TARGET);
 		try {
 		File leftTrajectoryFile = new File(SAVE_DIR + name + "/LeftTrajectory.traj");
 		Trajectory leftTrajectory = Pathfinder.readFromFile(leftTrajectoryFile);
@@ -87,12 +90,15 @@ public class DriveUsingTrajectory extends Command {
 			return;
 		}
 		double outputL = left.calculate((int) (1000 * DriveSub.getLeftDistance()));
+		SmartDashboard.putNumber("Left exp", left.getSegment().position * 39.37);
+		SmartDashboard.putNumber("Left act", DriveSub.getLeftDistance());
+		SmartDashboard.putNumber("Left output", outputL);
 		double outputR = right.calculate((int) (1000 * DriveSub.getRightDistance()));
 		double actualHeading = -DriveSub.getHeading() + startHeading + 90.0;
 		double desiredHeading = Pathfinder.r2d(left.getHeading());
 
 		double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading - actualHeading);
-		double turn = 4.0 * (-1.0 / 80.0) * angleDifference;
+		double turn = 3.7 * (-1.0 / 80.0) * angleDifference;
 
 		DriveSub.tankDrive((outputL + turn), (outputR - turn));
 	}
@@ -107,9 +113,14 @@ public class DriveUsingTrajectory extends Command {
 
 	// For safety, sets motor output to 0.
 	protected void end() {
+		LEDSub.actionsInProgress--;
 		DriveSub.setVoltageCompensation(false);
 		DriveSub.set(0, 0);
 		left = null;
 		right = null;
+	}
+	@Override
+	protected void interrupted() {
+	  end();
 	}
 }

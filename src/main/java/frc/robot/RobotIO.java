@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -31,7 +32,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * (e.g. speed controllers, joysticks, etc.)
  */
 public class RobotIO {
-    public static ArrayList<String> errors = new ArrayList<>();
 
     /*-----Cargo-----*/
     public static WPI_TalonSRX cargoMotor;
@@ -66,6 +66,11 @@ public class RobotIO {
     public static DoubleSolenoid intakeSolenoid;
     public static AnalogInput intakeSensor;
 
+    /*-----LEDs-----*/
+    public static PWM led_r;
+    public static PWM led_g;
+    public static PWM led_b;
+
     /*-----Misc-----*/
     public static Joystick driverStick;
     public static Joystick hatchStick;
@@ -99,22 +104,22 @@ public class RobotIO {
         rightMotor3 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_3_ID, MotorType.kBrushless);
 
         if (leftMotor1.setEncPosition(0) != CANError.kOK) {
-            errors.add("Error with left drive motor 1");
+            ErrorManager.add("Error with left drive motor 1");
         }
         if (leftMotor2.setEncPosition(0) != CANError.kOK) {
-            errors.add("Error with left drive motor 2");
+            ErrorManager.add("Error with left drive motor 2");
         }
         if (leftMotor3.setEncPosition(0) != CANError.kOK) {
-            errors.add("Error with left drive motor 3");
+            ErrorManager.add("Error with left drive motor 3");
         }
         if (rightMotor1.setEncPosition(0) != CANError.kOK) {
-            errors.add("Error with right drive motor 1");
+            ErrorManager.add("Error with right drive motor 1");
         }
         if (rightMotor2.setEncPosition(0) != CANError.kOK) {
-            errors.add("Error with right drive motor 2");
+            ErrorManager.add("Error with right drive motor 2");
         }
         if (rightMotor3.setEncPosition(0) != CANError.kOK) {
-            errors.add("Error with right drive motor 3");
+            ErrorManager.add("Error with right drive motor 3");
         }
         leftMotor2.follow(leftMotor1);
         leftMotor3.follow(leftMotor1);
@@ -142,7 +147,7 @@ public class RobotIO {
         elevatorMotorLeft.setClosedLoopRampRate(1.0);
         elevatorMotorLeft.enableVoltageCompensation(10);
         if (elevatorMotorLeft.setEncPosition(0) != CANError.kOK) {
-            errors.add("Error with left elevator motor");
+            ErrorManager.add("Error with left elevator motor");
         }
 
         elevatorMotorRight = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_RIGHT_ID, MotorType.kBrushless);
@@ -152,7 +157,7 @@ public class RobotIO {
         elevatorMotorRight.enableVoltageCompensation(10);
         elevatorMotorRight.getEncoder().setPosition(0);
         if (elevatorMotorRight.setEncPosition(0) != CANError.kOK) {
-            errors.add("Error with right elevator motor");
+            ErrorManager.add("Error with right elevator motor");
         }
 
         elevatorDownSwitch = new DigitalInput(RobotSettings.ELEVATOR_DOWN_SWITCH_PORT);
@@ -171,6 +176,11 @@ public class RobotIO {
         intakeSensor = new AnalogInput(RobotSettings.CARGO_INTAKE_SENSOR_PORT);
         intakeSolenoid.set(Value.kForward);
 
+        /*-----LEDs-----*/
+        led_r = new PWM(RobotSettings.LED_R_PORT);
+        led_g = new PWM(RobotSettings.LED_G_PORT);
+        led_b = new PWM(RobotSettings.LED_B_PORT);
+        
         /*-----Misc-----*/
         driverStick = new Joystick(RobotSettings.DRIVER_STICK_PORT);
         hatchStick = new Joystick(RobotSettings.HATCH_STICK_PORT);
@@ -179,13 +189,8 @@ public class RobotIO {
         compressor = new Compressor();
         pdp = new PowerDistributionPanel();
         if (pdp.getTemperature() < 0) {
-            errors.add("PDP error");
+            ErrorManager.add("PDP error");
         }
-        SmartDashboard.putStringArray("ErrorLog", errors.toArray(new String[errors.size()]));
-        for (int i = 0; i < 5; i++) {
-            String text = errors.size() > i ? errors.get(i) : "";
-            SmartDashboard.putString("err" + i, text);
-        }
-        SmartDashboard.putNumber("Errors", errors.size());
+        ErrorManager.updateSmartDashboard();
     }
 }

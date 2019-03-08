@@ -18,22 +18,31 @@ import org.opencv.imgproc.Imgproc;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.vision.VisionThread;
+import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.JoystickElevator;
+import frc.robot.commands.auto.L1CargoshipFront;
+import frc.robot.commands.auto.L2CargoshipFront;
+import frc.robot.commands.auto.L2CargoshipSide;
 import frc.robot.subsystems.CargoSub;
 import frc.robot.subsystems.ClimberSub;
 import frc.robot.subsystems.DriveSub;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.HatchSub;
 import frc.robot.subsystems.IntakeSub;
+import frc.robot.subsystems.LEDSub;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Waypoint;
 
 public class Robot extends TimedRobot {
+
+  public Robot() {
+    super(0.05);
+  }
   public static final RobotIO robotIO = new RobotIO();
 
   /*-----Subsystems-----*/
@@ -43,6 +52,7 @@ public class Robot extends TimedRobot {
   public static final HatchSub hatchSub = new HatchSub();
   public static final IntakeSub intakeSub = new IntakeSub();
   public static final ClimberSub climberSub = new ClimberSub();
+  public static final LEDSub ledSub = new LEDSub();
 
   /*-----Camera/vision vars-----*/
   private static boolean isCameraServerUp = false;
@@ -51,8 +61,11 @@ public class Robot extends TimedRobot {
   VisionThread visionThread;
   public static long lastVisionUpdateTime;
   public static double targetAngle = 0.0; // The angle the robot must turn to face the target
+  public static double targetGyroAngle = 0;
   public static double targetDistance = 0.0; // The x coordinate (distance left from middle of robot) of target
   public static boolean targetFound = false; // If robot can see a vision target
+
+  public static long matchStartTime = 0;
 
   public static OI oi;
   private static Command autonCommand;
@@ -61,6 +74,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    matchStartTime = System.currentTimeMillis();
     SmartDashboard.putData(RobotIO.pdp);
     oi = new OI();
     oi.setupOI();
@@ -70,11 +84,24 @@ public class Robot extends TimedRobot {
     position.addOption("Center (3)", 3);
     position.addOption("Right L2 (4)", 4);
     position.addOption("Right (5)", 5);
+    SmartDashboard.putData("Position", position);
     updateChooser();
     GenerateTrajectory.forceRegen = true;
-    GenerateTrajectory.execute("L2ToShipFront",
+    // Do 322 - x_coord to get mirror image
+    GenerateTrajectory.execute("testPath",
+      new Waypoint(0, 0, Pathfinder.d2r(90)),
+      new Waypoint(0, 40, Pathfinder.d2r(90)));
+      
+    GenerateTrajectory.execute("L2CargoShipSideLeft",
       new Waypoint(119, 18.75, Pathfinder.d2r(90)),
-      new Waypoint(150.125, 190, Pathfinder.d2r(90)));
+      new Waypoint(80, 215, Pathfinder.d2r(90)),
+      new Waypoint(113, 271, Pathfinder.d2r(5)));
+
+    GenerateTrajectory.execute("L2CargoShipSideRight",
+      new Waypoint(322-119, 18.75, Pathfinder.d2r(90)),
+      new Waypoint(322-80, 215, Pathfinder.d2r(90)),
+      new Waypoint(322-113, 271, Pathfinder.d2r(5)));
+      
   }
 
   @Override
@@ -82,6 +109,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Elevator Height", ElevatorSub.getHeight());
     double[] ypr = new double[3];
     SmartDashboard.putNumber("Gyro", ypr[0]);
+    SmartDashboard.putNumber("Pitch", ypr[1]);
+    SmartDashboard.putNumber("Roll", ypr[2]);
+
     updateChooser();
   }
 
@@ -97,20 +127,18 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    RobotIO.imu.setYaw(0);
+    matchStartTime = System.currentTimeMillis();
     autonCommand = auton.getSelected();
     if (autonCommand == null) {
       return;
     }
-    RobotIO.compressor.stop(); // disable compressor in auto to reduce variability
     autonCommand.start();
   }
 
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
-    if (autonCommand != null && autonCommand.isCompleted()) {
-      RobotIO.compressor.start();
-    }
     if (Math.abs(RobotIO.driverStick.getMagnitude()) > 0.5
       || Math.abs(RobotIO.hatchStick.getMagnitude()) > 0.5
       || Math.abs(RobotIO.cargoStick.getMagnitude()) > 0.5) {
@@ -125,7 +153,6 @@ public class Robot extends TimedRobot {
     if (autonCommand != null && autonCommand.isRunning()) {
       autonCommand.cancel();
     }
-    RobotIO.compressor.start();
     Command elevatorCmd = new JoystickElevator();
     elevatorCmd.start();
     elevatorCmd.close();
@@ -155,20 +182,28 @@ public class Robot extends TimedRobot {
     auton.addOption("Do Nothing", null);
     switch(newPos) {
       case 1: //Left L2
+        auton.addOption("Cargoship Front", new L2CargoshipFront(true));
+        auton.addOption("Cargoship Side", new L2CargoshipSide(true));
         break;
       case 2: //Left
+        auton.addOption("Cargoship Front", new L1CargoshipFront(true));
         break;
       case 3: //Center
         break;
       case 4: //Right L2
+        auton.addOption("Cargoship Front", new L2CargoshipFront(false));
+        auton.addOption("Cargoship Side", new L2CargoshipSide(true));
         break;
       case 5: //Right
+        auton.addOption("Cargoship Front", new L1CargoshipFront(false));
         break;
       default:
       break;
     }
     SmartDashboard.putData("Auton", auton);
   }
+
+  public static double lastGyroHeading = 0;
   private void enableCameraServer() {
     if (isCameraServerUp)
       return;
@@ -194,6 +229,7 @@ public class Robot extends TimedRobot {
           targetDistance = 0;
           targetAngle = 0;
           Robot.visionUpToDate = !Robot.disableVision;
+          lastGyroHeading = DriveSub.getHeading();
           return;
         }
         ArrayList<VisionTapeResult> lRects = new ArrayList<>(); // used for dev stream
@@ -329,6 +365,8 @@ public class Robot extends TimedRobot {
           Robot.targetDistance = 0;
           Robot.targetAngle = 0;
         }
+        Robot.targetGyroAngle = targetAngle + lastGyroHeading;
+        lastGyroHeading = DriveSub.getHeading();
         Robot.targetFound = targetFound;
         Robot.visionUpToDate = true;
         SmartDashboard.putNumber("Vision frame rate (ms)", System.currentTimeMillis() - Robot.lastVisionUpdateTime);
@@ -340,6 +378,7 @@ public class Robot extends TimedRobot {
       visionThread.start();
       isCameraServerUp = true;
     } catch (Exception e) {
+      ErrorManager.add("Vision Error " + e.getMessage());
       e.printStackTrace();
     }
   }

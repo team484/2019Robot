@@ -23,6 +23,7 @@ public class OI {
   private static Button toggleFront;
   private static Button tapLeft;
   private static Button tapRight;
+  private static Button driverPickup;
   private static Button testButton;
 
   /*-----Hatch Stick-----*/
@@ -40,6 +41,10 @@ public class OI {
   /*-----Cargo Stick-----*/
   private static Button shootCargo;
   private static Button pickupCargo;
+  private static Button spinIntakeIn;
+  private static Button spinIntakeOut;
+  private static Button lowerIntake;
+  private static Button raiseIntake;
   private static Button cargoL3;
   private static Button cargoL2;
   private static Button cargoShip;
@@ -52,14 +57,22 @@ public class OI {
     toggleFront = new JoystickButton(RobotIO.driverStick, 3);
     tapLeft = new JoystickButton(RobotIO.driverStick, 4);
     tapRight = new JoystickButton(RobotIO.driverStick, 5);
-    testButton = new JoystickButton(RobotIO.driverStick, 8);
+    driverPickup = new JoystickButton(RobotIO.driverStick, 8);
+    testButton = new JoystickButton(RobotIO.driverStick, 6);
     vision.whenPressed(new GoToTarget());
+    vision.whenReleased(new EnableVision(false));
+    vision.whenReleased(new JoystickDrive());
     toggleBack.whenPressed(new ClimberBackToggle());
     toggleFront.whenPressed(new ClimberFrontToggle());
     tapLeft.whenPressed(new RotateAngle(-2));
     tapRight.whenPressed(new RotateAngle(2));
 
-    testButton.whenPressed(new DriveUsingTrajectory("L2ToShipFront"));
+    testButton.whenPressed(new DriveUsingTrajectory("L2CargoShipSideLeft"));
+    driverPickup.whenPressed(new PickupCargo());
+    driverPickup.whileHeld(new ElevateToHeight(0));
+    driverPickup.whenReleased(new CargoForwardUntilClear());
+    driverPickup.whenReleased(new IntakeDoNothing());
+    driverPickup.whenReleased(new RaiseIntake());
     /*-----Hatch Stick-----*/
     shootHatch = new JoystickButton(RobotIO.hatchStick, 1);
     pickupHatch = new JoystickButton(RobotIO.hatchStick, 2);
@@ -92,6 +105,10 @@ public class OI {
     /*-----Cargo Stick-----*/
     shootCargo = new JoystickButton(RobotIO.cargoStick, 1);
     pickupCargo = new JoystickButton(RobotIO.cargoStick, 2);
+    spinIntakeOut = new JoystickButton(RobotIO.cargoStick, 3);
+    lowerIntake = new JoystickButton(RobotIO.cargoStick, 4);
+    spinIntakeIn = new JoystickButton(RobotIO.cargoStick, 5);
+    raiseIntake = new JoystickButton(RobotIO.cargoStick, 6);
     cargoL3 = new JoystickButton(RobotIO.cargoStick, 8);
     cargoL2 = new JoystickButton(RobotIO.cargoStick, 10);
     cargoShip = new JoystickButton(RobotIO.cargoStick, 11);
@@ -104,6 +121,13 @@ public class OI {
     pickupCargo.whenReleased(new IntakeDoNothing());
     pickupCargo.whenReleased(new RaiseIntake());
 
+    spinIntakeOut.whileHeld(new SpinIntake(-1.0));
+    spinIntakeOut.whenReleased(new IntakeDoNothing());
+    spinIntakeIn.whileHeld(new SpinIntake(1.0));
+    spinIntakeIn.whenReleased(new IntakeDoNothing());
+    lowerIntake.whenPressed(new LowerIntake());
+    raiseIntake.whenPressed(new RaiseIntake());
+    
     cargoL3.whenPressed(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_LEVEL_3 + RobotSettings.ELEVATOR_CARGO_OFFSET));
     cargoL3.whenPressed(new SetRocketOrCargo(true));
     cargoL2.whenPressed(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_LEVEL_2 + RobotSettings.ELEVATOR_CARGO_OFFSET));

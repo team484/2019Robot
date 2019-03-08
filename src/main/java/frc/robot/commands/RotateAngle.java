@@ -16,6 +16,7 @@ import frc.robot.Robot;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
 import frc.robot.subsystems.DriveSub;
+import frc.robot.subsystems.LEDSub;
 
 /**
  * Rotates the robot a set angle (in degrees)
@@ -53,11 +54,12 @@ public class RotateAngle extends Command {
 	public RotateAngle(double angle) {
 		requires(Robot.driveSub);
 		setpoint = angle;
-		pid.setOutputRange(-0.5, 0.5);
+		pid.setOutputRange(-0.8, 0.8);
 		requires(Robot.driveSub);
 	}
 
 	protected void initialize() {
+		LEDSub.actionsInProgress++;
 		DriveSub.setVoltageCompensation(true);
 		double[] ypr = new double[3];
 		if (RobotIO.imu != null) {
@@ -86,5 +88,10 @@ public class RotateAngle extends Command {
 		}
 		DriveSub.setVoltageCompensation(false);
 		DriveSub.set(0, 0);
+		LEDSub.actionsInProgress--;
+	}
+	@Override
+	protected void interrupted() {
+	  end();
 	}
 }

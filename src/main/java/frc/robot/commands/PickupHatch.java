@@ -8,7 +8,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
+import edu.wpi.first.wpilibj.command.WaitForChildren;
 import frc.robot.RobotSettings;
+import frc.robot.subsystems.LEDSub;
 
 public class PickupHatch extends CommandGroup {
   /**
@@ -17,10 +20,26 @@ public class PickupHatch extends CommandGroup {
   public PickupHatch() {
     addSequential(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_PICKUP));
     addSequential(new ReleaseHatch());
-    addSequential(new DriveUntilDistanceCollisionStop(0.3, 10)); //make sure we are against ship
-    addSequential(new DriveUntilDistance(-0.3, -0.125));
-    addSequential(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_PICKUP_RAISED));
+    addSequential(new DriveUntilDistanceCollisionStop(0.3, 10), 0.5); //make sure we are against ship
+    //addParallel(new DriveUntilDistance(-0.4, -0.1), 0.5);
+    addSequential(new RaiseElevator(), 2);
+    addSequential(new WaitCommand(0.2));
+    addSequential(new WaitForChildren());
     addSequential(new GrabHatch());
-    addSequential(new DriveUntilDistance(-0.3, -3));
+    addSequential(new DriveUntilDistance(-0.4, -5));
+  }
+
+  @Override
+  public void initialize() {
+    LEDSub.actionsInProgress++;
+  }
+
+  @Override
+  public void end() {
+    LEDSub.actionsInProgress--;
+  }
+  @Override
+  protected void interrupted() {
+    end();
   }
 }

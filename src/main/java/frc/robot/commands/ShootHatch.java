@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+import frc.robot.subsystems.LEDSub;
 
 public class ShootHatch extends CommandGroup {
   /**
@@ -24,5 +25,19 @@ public class ShootHatch extends CommandGroup {
     addSequential(new RetractHatch());
     addSequential(new DriveUntilDistance(-0.3, -3));
     addSequential(new GrabHatch());
+  }
+
+  @Override
+  public void initialize() {
+    LEDSub.actionsInProgress++;
+  }
+
+  @Override
+  public void end() {
+    LEDSub.actionsInProgress--;
+  }
+  @Override
+  protected void interrupted() {
+    end();
   }
 }

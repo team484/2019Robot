@@ -37,6 +37,11 @@ public class RobotSettings {
     public static final int RIGHT_ENCODER_B_PORT = 3;
     public static final int ELEVATOR_DOWN_SWITCH_PORT = 4;
 
+    /*-----PWM Ports-----*/
+    public static final int LED_R_PORT = 0;
+    public static final int LED_G_PORT = 1;
+    public static final int LED_B_PORT = 2;
+
     /*-----Joystick Ports-----*/
     public static final int DRIVER_STICK_PORT = 0;
     public static final int HATCH_STICK_PORT = 1;
@@ -71,16 +76,16 @@ public class RobotSettings {
     public static final double DRIVE_MOTOR_ENC_DPP = 1.1170107213;
     public static final boolean INVERT_DRIVE = false;
 
-    public static final double TIME_STEP = 0.02;
-    public static final double MAX_VELOCITY = 2.2; // m/s
-    public static final double MAX_ACCELERATION = 5; // m/s^2
-    public static final double MAX_JERK = 60; // m/s^3
-    public static final double WHEELBASE_WIDTH = 26;
+    public static final double TIME_STEP = 0.05;
+    public static final double MAX_VELOCITY = 2.5; // m/s
+    public static final double MAX_ACCELERATION = 4; // m/s^2
+    public static final double MAX_JERK = 80; // m/s^3
+    public static final double WHEELBASE_WIDTH = 26.5 * 0.0254;
     public static final String SAVE_DIR_TRAJECTORIES = "/home/lvuser/trajectories/";
     public static final int LEFT_ENC_TIC_PER_ROT = (int) (1000.0 * 4.0 * Math.PI); // Encoder ticks per wheel rotation
     public static final int RIGHT_ENC_TIC_PER_ROT = (int) (1000.0 * 4.0 * Math.PI); // Encoder ticks per wheel rotation
     public static final double WHEEL_DIAMETER = 4.0 * 0.0254; // Wheel diameter (in) * m/in
-    public static final double VOLTAGE_TARGET = 8.3;
+    public static final double VOLTAGE_TARGET = 7;
 
     public static final double ROTATE_ANGLE_KP = 0.04;
     public static final double ROTATE_ANGLE_KI = 0.004;
@@ -89,7 +94,7 @@ public class RobotSettings {
     public static final double ROTATE_PID_TOLERANCE = 0;
 
     public static final double DRIVE_PID_UPDATE_RATE = 0.01;
-    public static final double MAINTAIN_ANGLE_KP = 0.05;
+    public static final double MAINTAIN_ANGLE_KP = 0.06;
     public static final double MAINTAIN_ANGLE_KI = 0.001;
     public static final double MAINTAIN_ANGLE_KD = 0.0;
     public static final double DRIVE_PID_TOLERANCE = 8;
@@ -131,7 +136,7 @@ public class RobotSettings {
 
     public static final double ELEVATOR_HATCH_PICKUP = 5.0;
     public static final double ELEVATOR_HATCH_PICKUP_RAISED = 11;
-    public static final double ELEVATOR_HATCH_LEVEL_1 = 8;
+    public static final double ELEVATOR_HATCH_LEVEL_1 = 9;
     public static final double ELEVATOR_HATCH_LEVEL_2 = 35.5;
     public static final double ELEVATOR_HATCH_LEVEL_3 = 64;
 
@@ -141,7 +146,7 @@ public class RobotSettings {
     /*-----Hatch Vars-----*/
 
     /*-----Intake Vars-----*/
-    public static final double INTAKE_MOTOR_SPEED = 0.7;
+    public static final double INTAKE_MOTOR_SPEED = 1.0;
     public static final double INTAKE_SENSOR_VOLTAGE = 0.5;
 
     /*-----Vision Vars-----*/

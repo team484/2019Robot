@@ -7,7 +7,10 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.ErrorCode;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.ErrorManager;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
 import frc.robot.commands.JoystickDrive;
@@ -39,13 +42,17 @@ public class DriveSub extends Subsystem {
   }
 
   public static void setVoltageCompensation(boolean enabled) {
+    setVoltageCompensation(enabled, RobotSettings.VOLTAGE_TARGET);
+  }
+
+  public static void setVoltageCompensation(boolean enabled, double voltage) {
     if (enabled) {
-      RobotIO.leftMotor1.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
-      RobotIO.leftMotor2.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
-      RobotIO.leftMotor3.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
-      RobotIO.rightMotor1.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
-      RobotIO.rightMotor2.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
-      RobotIO.rightMotor3.enableVoltageCompensation(RobotSettings.VOLTAGE_TARGET);
+      RobotIO.leftMotor1.enableVoltageCompensation(voltage);
+      RobotIO.leftMotor2.enableVoltageCompensation(voltage);
+      RobotIO.leftMotor3.enableVoltageCompensation(voltage);
+      RobotIO.rightMotor1.enableVoltageCompensation(voltage);
+      RobotIO.rightMotor2.enableVoltageCompensation(voltage);
+      RobotIO.rightMotor3.enableVoltageCompensation(voltage);
     } else {
       RobotIO.leftMotor1.disableVoltageCompensation();
       RobotIO.leftMotor2.disableVoltageCompensation();
@@ -65,6 +72,7 @@ public class DriveSub extends Subsystem {
       return RobotIO.leftEncoder.getDistance() - lastLDistReset;
     }
     System.err.println("Possible error with left encoder");
+    ErrorManager.add("Possible error with left encoder");
     return getLeftIntegratedEncDistance() - lastLDistReset;
   }
 
@@ -73,6 +81,7 @@ public class DriveSub extends Subsystem {
       return RobotIO.rightEncoder.getDistance() - lastRDistReset;
     }
     System.err.println("Possible error with right encoder");
+    ErrorManager.add("Possible error with right encoder");
     return getRightIntegratedEncDistance() - lastRDistReset;
   }
 
@@ -110,7 +119,10 @@ public class DriveSub extends Subsystem {
    */
   public static double getHeading() {
     double[] ypr = new double[3];
-    RobotIO.imu.getYawPitchRoll(ypr);
+    ErrorCode err = RobotIO.imu.getYawPitchRoll(ypr);
+    if (err.value != 0) {
+      ErrorManager.add("IMU Error - " + err.name());
+    }
     return ypr[0];
   }
   

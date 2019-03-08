@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.IntakeSub;
+import frc.robot.subsystems.LEDSub;
 
 /**
  * Spins the cargo intake wheels
@@ -19,6 +20,11 @@ public class SpinIntake extends Command {
   public SpinIntake(double speed) {
     this.speed = speed;
     requires(Robot.intakeSub);
+  }
+
+  @Override
+  protected void initialize() {
+    LEDSub.actionsInProgress++;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -37,6 +43,10 @@ public class SpinIntake extends Command {
   @Override
   protected void end() {
     IntakeSub.setSpeed(0);
+    LEDSub.actionsInProgress--;
   }
-
+  @Override
+  protected void interrupted() {
+    end();
+  }
 }

@@ -16,15 +16,14 @@ import frc.robot.Robot;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
 import frc.robot.subsystems.DriveSub;
-import frc.robot.subsystems.LEDSub;
+import frc.robot.subsystems.ElevatorSub;
 
 /**
  * Drives at a set speed until the vision target is reached
  */
-public class DriveUntilTarget extends Command {
-  private double speed;
-  private double distance;
+public class JoystickDriveToTargetV2 extends Command {
   private int i = 0;
+  private static double lastHeading = 0;
 
 private static PIDController pid = new PIDController(RobotSettings.MAINTAIN_ANGLE_KP,
   RobotSettings.MAINTAIN_ANGLE_KI, RobotSettings.MAINTAIN_ANGLE_KD, new PIDSource() {
@@ -35,7 +34,10 @@ private static PIDController pid = new PIDController(RobotSettings.MAINTAIN_ANGL
 
     @Override
     public double pidGet() {
-      return DriveSub.getHeading();
+      if (Robot.targetFound && ElevatorSub.getHeight() < 4 && Robot.targetDistance > 20 && Robot.targetGyroAngle != 0) { 
+        lastHeading = Robot.targetGyroAngle;
+      }
+      return DriveSub.getHeading() - lastHeading;
     }
 
     @Override
@@ -46,23 +48,25 @@ private static PIDController pid = new PIDController(RobotSettings.MAINTAIN_ANGL
 
     @Override
     public void pidWrite(double output) {
-      DriveSub.pidOut2 = output;
-      DriveSub.doublePIDDrive();
+      double joystick = RobotIO.driverStick.getY();
+      if (joystick > 0.65) joystick = 0.65;
+      if (joystick < -0.65) joystick = -0.65;
+      DriveSub.set(-joystick, output);
     }
   }, RobotSettings.ROTATE_PID_UPDATE_RATE);
-  public DriveUntilTarget(double speed, double distance) {
-    this.speed = speed;
-    this.distance = distance;
+  public JoystickDriveToTargetV2() {
     requires(Robot.driveSub);
+    pid.setOutputRange(-0.65, 0.65);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    LEDSub.actionsInProgress++;
-    DriveSub.pidOut1 = this.speed;
-    DriveSub.pidOut2 = 0;
-    pid.setSetpoint(DriveSub.getHeading() + Robot.targetAngle);
+    pid.setSetpoint(0);
+    lastHeading = DriveSub.getHeading();
+    if (Robot.targetFound && ElevatorSub.getHeight() < 4) { 
+      lastHeading = Robot.targetGyroAngle;
+    }
     pid.reset();
     pid.enable();
     DriveSub.setVoltageCompensation(true);
@@ -78,13 +82,7 @@ private static PIDController pid = new PIDController(RobotSettings.MAINTAIN_ANGL
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if (Math.abs(RobotIO.driverStick.getMagnitude()) > 0.2) {
-      return true;
-    }
-    if (Robot.targetDistance < distance && Robot.targetFound) {
-      //return true;
-    }
-    return speed <= 2 && i >= 50;
+    return false;
   }
 
   // Called once after isFinished returns true
@@ -93,11 +91,9 @@ private static PIDController pid = new PIDController(RobotSettings.MAINTAIN_ANGL
     pid.disable();
     DriveSub.setVoltageCompensation(false);
     DriveSub.set(0, 0);
-    LEDSub.actionsInProgress--;
   }
   @Override
   protected void interrupted() {
     end();
   }
-
 }

@@ -9,13 +9,26 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.subsystems.LEDSub;
 
 /**
  * Waits for vision pipeline to execute before continuing
  */
 public class WaitForVision extends Command {
   @Override
+  protected void initialize() {
+    LEDSub.actionsInProgress++;
+  }
+  @Override
   protected boolean isFinished() {
     return (!Robot.disableVision) && Robot.visionUpToDate;
+  }
+  @Override
+  protected void end() {
+    LEDSub.actionsInProgress--;
+  }
+  @Override
+  protected void interrupted() {
+    end();
   }
 }

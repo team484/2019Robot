@@ -8,25 +8,39 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.RobotIO;
-import frc.robot.RobotSettings;
+import frc.robot.Robot;
+import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.LEDSub;
 
-/**
- * This command runs until cargo is inside the intake
- */
-public class WaitForCargoInIntake extends Command {
+public class RaiseElevator extends Command {
+  private double startHeight;
+  public RaiseElevator() {
+    requires(Robot.elevatorSub);
+  }
+
+  // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    startHeight = ElevatorSub.getHeight();
     LEDSub.actionsInProgress++;
   }
+
+  // Called repeatedly when this Command is scheduled to run
+  @Override
+  protected void execute() {
+    ElevatorSub.set(0.5);
+  }
+
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return (RobotIO.intakeSensor.getAverageVoltage() > RobotSettings.INTAKE_SENSOR_VOLTAGE);
+    return ElevatorSub.getHeight() > startHeight + 3;
   }
+
+  // Called once after isFinished returns true
   @Override
   protected void end() {
+    ElevatorSub.set(0);
     LEDSub.actionsInProgress--;
   }
   @Override

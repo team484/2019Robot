@@ -8,27 +8,30 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.RobotIO;
-import frc.robot.RobotSettings;
-import frc.robot.subsystems.LEDSub;
+import frc.robot.Robot;
 
-/**
- * This command runs until cargo is inside the intake
- */
-public class WaitForCargoInIntake extends Command {
-  @Override
-  protected void initialize() {
-    LEDSub.actionsInProgress++;
-  }
+public class WaitUntilTargetIsClose extends Command {
+  private double lastDistance = 999;
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return (RobotIO.intakeSensor.getAverageVoltage() > RobotSettings.INTAKE_SENSOR_VOLTAGE);
+    if (!Robot.targetFound) {
+      return false;
+    }
+    if (lastDistance < 20 && Robot.targetDistance < 20) {
+      return true;
+    }
+    lastDistance = Robot.targetDistance == lastDistance ? lastDistance : Robot.targetDistance;
+    return false;
   }
+
+  // Called once after isFinished returns true
   @Override
   protected void end() {
-    LEDSub.actionsInProgress--;
   }
+
+  // Called when another command which requires one or more of the same
+  // subsystems is scheduled to run
   @Override
   protected void interrupted() {
     end();

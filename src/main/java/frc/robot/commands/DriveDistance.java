@@ -16,6 +16,7 @@ import frc.robot.Robot;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
 import frc.robot.subsystems.DriveSub;
+import frc.robot.subsystems.LEDSub;
 
 /**
  * Drives a set distance using a PID loop
@@ -92,6 +93,7 @@ public class DriveDistance extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		LEDSub.actionsInProgress++;
 		DriveSub.setVoltageCompensation(true);
 		speed = speedMultiplier;
 		if (RobotIO.leftEncoder != null) {
@@ -132,5 +134,10 @@ public class DriveDistance extends Command {
 		pid2.disable();
 		DriveSub.setVoltageCompensation(false);
 		DriveSub.set(0, 0);
+		LEDSub.actionsInProgress--;
+	}
+	@Override
+	protected void interrupted() {
+	  end();
 	}
 }

@@ -7,59 +7,81 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotIO;
+import frc.robot.RobotSettings;
 import frc.robot.subsystems.DriveSub;
-import frc.robot.subsystems.LEDSub;
 
 /**
- * Drives at a set speed until a set distance is reached or the robot stops
- * moving
+ * Drives at a set speed until the vision target is reached
  */
-public class DriveUntilDistanceCollisionStop extends Command {
-  private double speed;
-  private double distance;
+public class JoystickDriveToTarget extends Command {
   private int i = 0;
 
-  public DriveUntilDistanceCollisionStop(double speed, double distance) {
-    this.speed = speed;
-    this.distance = distance;
+private static PIDController pid = new PIDController(RobotSettings.MAINTAIN_ANGLE_KP,
+  RobotSettings.MAINTAIN_ANGLE_KI, RobotSettings.MAINTAIN_ANGLE_KD, new PIDSource() {
+
+    @Override
+    public void setPIDSourceType(PIDSourceType pidSource) {
+    }
+
+    @Override
+    public double pidGet() {
+      return DriveSub.getHeading();
+    }
+
+    @Override
+    public PIDSourceType getPIDSourceType() {
+      return PIDSourceType.kDisplacement;
+    }
+  }, new PIDOutput() {
+
+    @Override
+    public void pidWrite(double output) {
+      DriveSub.set(-RobotIO.driverStick.getY(), output);
+    }
+  }, RobotSettings.ROTATE_PID_UPDATE_RATE);
+  public JoystickDriveToTarget() {
     requires(Robot.driveSub);
+    pid.setOutputRange(-0.5, 0.5);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    LEDSub.actionsInProgress++;
-    DriveSub.resetDistance();
-    i = 0;
+    pid.setSetpoint(Robot.targetGyroAngle);
+    pid.reset();
+    pid.enable();
     DriveSub.setVoltageCompensation(true);
+    i = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    DriveSub.set(speed, 0);
     i++;
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    System.out.println(speed);
-    return DriveSub.getDistance() > distance || (speed <= 1 && i >= 10);
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    DriveSub.set(0, 0);
+    pid.disable();
     DriveSub.setVoltageCompensation(false);
-    LEDSub.actionsInProgress--;
+    DriveSub.set(0, 0);
   }
   @Override
   protected void interrupted() {
     end();
   }
-
 }

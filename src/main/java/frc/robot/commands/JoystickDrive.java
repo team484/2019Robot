@@ -26,7 +26,7 @@ public class JoystickDrive extends Command {
   protected void execute() {
     double y = RobotIO.driverStick.getY();
     if (ElevatorSub.getHeight() > 35) {
-      y /= 3.0;
+      y /= 2.0;
     }
     double x = RobotIO.driverStick.getX() * 0.8;
     DriveSub.set(-y * 0.7, x);
@@ -42,6 +42,10 @@ public class JoystickDrive extends Command {
   @Override
   protected void end() {
     DriveSub.set(0,0);
+  }
+  @Override
+  protected void interrupted() {
+    end();
   }
 
 }

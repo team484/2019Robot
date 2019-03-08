@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.ElevatorSub;
+import frc.robot.subsystems.LEDSub;
 
 public class LowerElevator extends Command {
   private double startHeight;
@@ -20,13 +21,14 @@ public class LowerElevator extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    LEDSub.actionsInProgress++;
     startHeight = ElevatorSub.getHeight();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ElevatorSub.set(-0.4);
+    ElevatorSub.set(-0.2);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -38,6 +40,11 @@ public class LowerElevator extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    LEDSub.actionsInProgress--;
     ElevatorSub.set(0);
+  }
+  @Override
+  protected void interrupted() {
+    end();
   }
 }

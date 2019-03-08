@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotIO;
 import frc.robot.subsystems.DriveSub;
+import frc.robot.subsystems.LEDSub;
 
 /**
  * Drives at a set speed until a set distance is passed
@@ -38,6 +39,7 @@ public class DriveUntilDistance extends Command {
   protected void initialize() {
     DriveSub.resetDistance();
     DriveSub.setVoltageCompensation(true);
+    LEDSub.actionsInProgress++;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -64,6 +66,11 @@ public class DriveUntilDistance extends Command {
   protected void end() {
     DriveSub.setVoltageCompensation(false);
     DriveSub.set(0, 0);
+    LEDSub.actionsInProgress--;
+  }
+  @Override
+  protected void interrupted() {
+    end();
   }
 
 }

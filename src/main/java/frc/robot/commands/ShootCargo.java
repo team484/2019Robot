@@ -40,7 +40,7 @@ public class ShootCargo extends Command {
     }
     if (i < speed && ramp) {
       CargoSub.set(i);
-      i += 0.01;
+      i += 0.025;
       return;
     }
     CargoSub.set(speed);
@@ -56,6 +56,10 @@ public class ShootCargo extends Command {
   @Override
   protected void end() {
     CargoSub.set(0);
+  }
+  @Override
+  protected void interrupted() {
+    end();
   }
 
 }

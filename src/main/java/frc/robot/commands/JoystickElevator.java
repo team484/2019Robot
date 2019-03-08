@@ -60,6 +60,7 @@ public class JoystickElevator extends Command {
   public JoystickElevator() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.elevatorSub);
+    SmartDashboard.putData(pid);
   }
 
   // Called just before this Command runs the first time
@@ -141,6 +142,11 @@ public class JoystickElevator extends Command {
   @Override
   protected void end() {
     ElevatorSub.set(0);
+    pid.disable();
+  }
+  @Override
+  protected void interrupted() {
+    end();
   }
 
 }

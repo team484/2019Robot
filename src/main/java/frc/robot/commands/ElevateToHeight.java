@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotSettings;
 import frc.robot.subsystems.ElevatorSub;
+import frc.robot.subsystems.LEDSub;
 
 /**
  * Raises/lowers the elevator to the specified height
@@ -56,6 +57,7 @@ public class ElevateToHeight extends Command {
   }
 
   protected void initialize() {
+    LEDSub.actionsInProgress++;
     ElevateToHeight.isElevating = true;
     if (pid == null)
       return;
@@ -74,10 +76,15 @@ public class ElevateToHeight extends Command {
   }
 
   protected void end() {
+    LEDSub.actionsInProgress--;
     ElevateToHeight.isElevating = false;
     if (pid != null) {
       pid.disable();
     }
     ElevatorSub.set(0);
+  }
+  @Override
+  protected void interrupted() {
+    end();
   }
 }

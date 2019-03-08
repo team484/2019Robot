@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.ErrorManager;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
 import frc.robot.commands.JoystickElevator;
@@ -30,6 +31,15 @@ public class ElevatorSub extends Subsystem {
   public static void set(double speed, boolean managed) {
     if (RobotIO.elevatorMotorLeft == null || RobotIO.elevatorMotorRight == null) {
       return;
+    }
+    if (RobotIO.imu != null) {
+      double[] ypr = new double[3];
+      RobotIO.imu.getYawPitchRoll(ypr);
+      if (Math.abs(ypr[1]) > 20.0 || Math.abs(ypr[2]) > 20.0) {
+        managed = true;
+        speed = -1.0;
+        ErrorManager.add("Robot Tip Detected");
+      }
     }
     double height = getHeight();
     double rate = getRate();

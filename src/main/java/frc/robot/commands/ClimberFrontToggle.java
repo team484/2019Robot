@@ -7,7 +7,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import frc.robot.Robot;
 import frc.robot.subsystems.ClimberSub;
 
 /**
@@ -17,6 +19,9 @@ public class ClimberFrontToggle extends InstantCommand {
 
   @Override
   protected void execute() {
+    if (System.currentTimeMillis() - Robot.matchStartTime < 120*1000 && DriverStation.getInstance().isFMSAttached()) {
+      return; //Only allow the robot to climb in the last 30 seconds
+    }
     ClimberSub.toggleFront();
   }
 

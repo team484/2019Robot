@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.command.WaitForChildren;
+import frc.robot.Robot;
 import frc.robot.RobotSettings;
 
 public class GoToTarget extends CommandGroup {
@@ -17,15 +18,33 @@ public class GoToTarget extends CommandGroup {
    * Add your docs here.
    */
   public GoToTarget() {
-    addSequential(new EnableVision(true));
+    //addSequential(new EnableVision(true));
     addSequential(new ElevateToHeight(0));
     addSequential(new WaitForVision());
-    addSequential(new RotateToTarget());
-    addSequential(new WaitCommand(0.2));
-    addParallel(new DriveUntilTarget(0.5, 12), 8);
-    addSequential(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_LEVEL_1));
-    addSequential(new EnableVision(false));
+    //addSequential(new RotateToTarget());
+    //addSequential(new WaitCommand(0.2));
+    //addParallel(new DriveUntilTarget(0.5, 12), 8);
+    //addSequential(new EnableVision(false));
+    //addSequential(new WaitForChildren());
+    //addSequential(new DriveUntilDistance(0.8, 10), 0.5);
+
+    addParallel(new JoystickDriveToTargetV2());
+    addSequential(new WaitUntilTargetIsClose());
+    //addSequential(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_PICKUP));
     addSequential(new WaitForChildren());
-    addSequential(new DriveUntilDistance(0.8, 10), 0.5);
+  }
+
+  @Override
+  protected void end() {
+    Robot.disableVision = true;
+  }
+
+  @Override
+  protected void initialize() {
+    Robot.disableVision = false;
+  }
+  @Override
+  protected void interrupted() {
+    end();
   }
 }
