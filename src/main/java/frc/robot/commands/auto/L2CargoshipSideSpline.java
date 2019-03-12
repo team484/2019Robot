@@ -31,13 +31,8 @@ public class L2CargoshipSideSpline extends CommandGroup {
     
     addSequential(new DriveUsingTrajectory(isLeftSide ?  "L2CargoShipSideLeft" : "L2CargoShipSideRight"));
     
-    addSequential(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_LEVEL_1));
-    addParallel(new DriveUntilTarget(0.5, 20), 4);
-    addSequential(new WaitCommand(0.5));
-    addSequential(new EnableVision(false));
-    addSequential(new ShootHatch());
-    addSequential(new DriveUntilDistance(-0.5, -15));
-    addSequential(new RotateAngle(isLeftSide ? 120 : -120));
+    addSequential(new ElevateToHeight(RobotSettings.ELEVATOR_CARGO_SHIP));
+    addParallel(new DriveUntilTarget(0.5, 20), 2);
   }
 
   @Override

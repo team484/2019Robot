@@ -19,26 +19,21 @@ import frc.robot.commands.RotateAngle;
 import frc.robot.commands.SetRocketOrCargo;
 import frc.robot.commands.ShootHatch;
 
-public class L2CargoshipSide extends CommandGroup {
+public class L2CargoshipFrontHold extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public L2CargoshipSide(boolean isLeftSide) {
+  public L2CargoshipFrontHold(boolean isLeftSide) {
     addParallel(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_PICKUP));
     addSequential(new EnableVision(true));
     addSequential(new SetRocketOrCargo(false));
-    addSequential(new DriveUntilDistance(0.8, 108.84));
-    addSequential(new RotateAngle(isLeftSide ? -10 : 10));
-    addSequential(new DriveUntilDistance(0.8, 134.82));
-    addSequential(new RotateAngle(isLeftSide ? 100 : -100));
-    addSequential(new DriveUntilTarget(0.65, 50), 4);
-    addParallel(new DriveUntilTarget(0.5, 50), 4);
-    addSequential(new WaitCommand(0.5));
-    addSequential(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_LEVEL_1));
-    addSequential(new EnableVision(false));
-    addSequential(new ShootHatch());
-    addSequential(new DriveUntilDistance(-0.5, -15));
-    addSequential(new RotateAngle(isLeftSide ? 120 : -120));
+    addSequential(new DriveUntilDistance(0.8, 88.84));
+    addParallel(new ElevateToHeight(0));
+    addSequential(new RotateAngle(isLeftSide ? 45 : -45));
+    addSequential(new DriveUntilDistance(0.8, 10.37));
+    addSequential(new RotateAngle(isLeftSide ? -45 : 45));
+    addSequential(new WaitCommand(0.3));
+    addSequential(new DriveUntilTarget(0.3, 15), 1);
   }
 
   @Override

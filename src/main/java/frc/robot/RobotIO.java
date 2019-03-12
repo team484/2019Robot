@@ -97,11 +97,22 @@ public class RobotIO {
 
         /*-----Drivetrain-----*/
         leftMotor1 = new CANSparkMax(RobotSettings.LEFT_MOTOR_1_ID, MotorType.kBrushless);
+        leftMotor1.setSmartCurrentLimit(150);
         leftMotor2 = new CANSparkMax(RobotSettings.LEFT_MOTOR_2_ID, MotorType.kBrushless);
+        leftMotor2.setSmartCurrentLimit(150);
+
         leftMotor3 = new CANSparkMax(RobotSettings.LEFT_MOTOR_3_ID, MotorType.kBrushless);
+        leftMotor3.setSmartCurrentLimit(150);
+
         rightMotor1 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_1_ID, MotorType.kBrushless);
+        rightMotor1.setSmartCurrentLimit(150);
+
         rightMotor2 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_2_ID, MotorType.kBrushless);
+        rightMotor2.setSmartCurrentLimit(150);
+
         rightMotor3 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_3_ID, MotorType.kBrushless);
+        rightMotor3.setSmartCurrentLimit(150);
+
 
         if (leftMotor1.setEncPosition(0) != CANError.kOK) {
             ErrorManager.add("Error with left drive motor 1");
@@ -143,8 +154,8 @@ public class RobotIO {
         /*-----Elevator-----*/
         elevatorMotorLeft = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_LEFT_ID, MotorType.kBrushless);
         elevatorMotorLeft.setSmartCurrentLimit(80);
-        elevatorMotorLeft.setOpenLoopRampRate(1.0);
-        elevatorMotorLeft.setClosedLoopRampRate(1.0);
+        elevatorMotorLeft.setOpenLoopRampRate(0.8);
+        elevatorMotorLeft.setClosedLoopRampRate(0.8);
         elevatorMotorLeft.enableVoltageCompensation(10);
         if (elevatorMotorLeft.setEncPosition(0) != CANError.kOK) {
             ErrorManager.add("Error with left elevator motor");
@@ -152,8 +163,8 @@ public class RobotIO {
 
         elevatorMotorRight = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_RIGHT_ID, MotorType.kBrushless);
         elevatorMotorRight.setSmartCurrentLimit(80);
-        elevatorMotorRight.setOpenLoopRampRate(1.0);
-        elevatorMotorRight.setClosedLoopRampRate(1.0);
+        elevatorMotorRight.setOpenLoopRampRate(0.8);
+        elevatorMotorRight.setClosedLoopRampRate(0.8);
         elevatorMotorRight.enableVoltageCompensation(10);
         elevatorMotorRight.getEncoder().setPosition(0);
         if (elevatorMotorRight.setEncPosition(0) != CANError.kOK) {

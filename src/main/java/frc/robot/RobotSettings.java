@@ -126,10 +126,10 @@ public class RobotSettings {
     public static final double ELEVATOR_SPEED_MULTIPLYER = 0.8;
     public static final double ELEVATOR_UP_KP = 0.06;
     public static final double ELEVATOR_UP_KI = 0;
-    public static final double ELEVATOR_UP_KD = 2;
+    public static final double ELEVATOR_UP_KD = 1.3;
     public static final double ELEVATOR_DOWN_KP = 0.06;
     public static final double ELEVATOR_DOWN_KI = 0;
-    public static final double ELEVATOR_DOWN_KD = 2;
+    public static final double ELEVATOR_DOWN_KD =1.3;
     public static final double ELEVATOR_GRAVITY_COMP = 0.05;
     public static final double ELEVATOR_MAX_DECEL_RATE = 2.4; // 1/seconds
     public static final boolean ELEVATOR_SWITCH_DOWN_STATE = false;

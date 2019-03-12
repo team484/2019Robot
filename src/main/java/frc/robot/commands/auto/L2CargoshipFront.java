@@ -31,8 +31,9 @@ public class L2CargoshipFront extends CommandGroup {
     addSequential(new RotateAngle(isLeftSide ? 45 : -45));
     addSequential(new DriveUntilDistance(0.8, 10.37));
     addSequential(new RotateAngle(isLeftSide ? -45 : 45));
-    addSequential(new WaitCommand(0.25));
-    addSequential(new DriveUntilTarget(0.6, 35), 1.5);
+    addSequential(new WaitCommand(0.3));
+    addSequential(new DriveUntilTarget(0.3, 15), 1);
+    addSequential(new DriveUntilTarget(0.6, 30), 1.5);
     addParallel(new DriveUntilTarget(0.5, 50), 3);
     addSequential(new WaitCommand(0.5));
     addSequential(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_LEVEL_1));

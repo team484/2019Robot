@@ -29,6 +29,8 @@ public class JoystickDrive extends Command {
       y /= 2.0;
     }
     double x = RobotIO.driverStick.getX() * 0.8;
+    if (x > 0.8) x = 0.8;
+    if (x < -0.8) x = -0.8;
     DriveSub.set(-y * 0.7, x);
   }
 

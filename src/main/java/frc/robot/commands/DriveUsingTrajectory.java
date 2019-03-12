@@ -90,9 +90,6 @@ public class DriveUsingTrajectory extends Command {
 			return;
 		}
 		double outputL = left.calculate((int) (1000 * DriveSub.getLeftDistance()));
-		SmartDashboard.putNumber("Left exp", left.getSegment().position * 39.37);
-		SmartDashboard.putNumber("Left act", DriveSub.getLeftDistance());
-		SmartDashboard.putNumber("Left output", outputL);
 		double outputR = right.calculate((int) (1000 * DriveSub.getRightDistance()));
 		double actualHeading = -DriveSub.getHeading() + startHeading + 90.0;
 		double desiredHeading = Pathfinder.r2d(left.getHeading());

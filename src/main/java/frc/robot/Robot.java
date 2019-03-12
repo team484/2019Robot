@@ -16,6 +16,9 @@ import org.opencv.core.RotatedRect;
 import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -27,7 +30,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.JoystickElevator;
 import frc.robot.commands.auto.L1CargoshipFront;
 import frc.robot.commands.auto.L2CargoshipFront;
+import frc.robot.commands.auto.L2CargoshipFrontHold;
 import frc.robot.commands.auto.L2CargoshipSide;
+import frc.robot.commands.auto.L2CargoshipSideSpline;
 import frc.robot.subsystems.CargoSub;
 import frc.robot.subsystems.ClimberSub;
 import frc.robot.subsystems.DriveSub;
@@ -75,7 +80,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     matchStartTime = System.currentTimeMillis();
-    SmartDashboard.putData(RobotIO.pdp);
     oi = new OI();
     oi.setupOI();
     enableCameraServer();
@@ -86,21 +90,21 @@ public class Robot extends TimedRobot {
     position.addOption("Right (5)", 5);
     SmartDashboard.putData("Position", position);
     updateChooser();
-    GenerateTrajectory.forceRegen = true;
+    GenerateTrajectory.forceRegen = false;
     // Do 322 - x_coord to get mirror image
     GenerateTrajectory.execute("testPath",
       new Waypoint(0, 0, Pathfinder.d2r(90)),
       new Waypoint(0, 40, Pathfinder.d2r(90)));
       
     GenerateTrajectory.execute("L2CargoShipSideLeft",
-      new Waypoint(119, 18.75, Pathfinder.d2r(90)),
+      new Waypoint(119, 0.75, Pathfinder.d2r(90)),
       new Waypoint(80, 215, Pathfinder.d2r(90)),
-      new Waypoint(113, 271, Pathfinder.d2r(5)));
+      new Waypoint(113, 283, Pathfinder.d2r(5)));
 
     GenerateTrajectory.execute("L2CargoShipSideRight",
-      new Waypoint(322-119, 18.75, Pathfinder.d2r(90)),
+      new Waypoint(322-119, 0.75, Pathfinder.d2r(90)),
       new Waypoint(322-80, 215, Pathfinder.d2r(90)),
-      new Waypoint(322-113, 271, Pathfinder.d2r(5)));
+      new Waypoint(322-113, 283, Pathfinder.d2r(5)));
       
   }
 
@@ -156,11 +160,15 @@ public class Robot extends TimedRobot {
     Command elevatorCmd = new JoystickElevator();
     elevatorCmd.start();
     elevatorCmd.close();
+    DriveSub.setVoltageCompensation(false);
   }
 
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+    if (RobotIO.driverStick.getRawButton(11)) {
+      matchStartTime = 0;
+    }
   }
 
   @Override
@@ -182,8 +190,10 @@ public class Robot extends TimedRobot {
     auton.addOption("Do Nothing", null);
     switch(newPos) {
       case 1: //Left L2
-        auton.addOption("Cargoship Front", new L2CargoshipFront(true));
-        auton.addOption("Cargoship Side", new L2CargoshipSide(true));
+      auton.addOption("Cargoship Front", new L2CargoshipFront(true));
+      auton.addOption("Cargoship Front Hold", new L2CargoshipFrontHold(true));
+      auton.addOption("Cargoship Side", new L2CargoshipSide(true));
+      auton.addOption("Cargoship Side Cargo", new L2CargoshipSideSpline(true));
         break;
       case 2: //Left
         auton.addOption("Cargoship Front", new L1CargoshipFront(true));
@@ -192,7 +202,10 @@ public class Robot extends TimedRobot {
         break;
       case 4: //Right L2
         auton.addOption("Cargoship Front", new L2CargoshipFront(false));
-        auton.addOption("Cargoship Side", new L2CargoshipSide(true));
+        auton.addOption("Cargoship Front Hold", new L2CargoshipFrontHold(false));
+        auton.addOption("Cargoship Side", new L2CargoshipSide(false));
+        auton.addOption("Cargoship Side Cargo", new L2CargoshipSideSpline(false));
+
         break;
       case 5: //Right
         auton.addOption("Cargoship Front", new L1CargoshipFront(false));
@@ -210,15 +223,17 @@ public class Robot extends TimedRobot {
     try {
       // -----Driver Camera-----
       UsbCamera driverCamera = CameraServer.getInstance().startAutomaticCapture(RobotSettings.DRIVER_CAM_ID);
-      driverCamera.setExposureAuto();
-      driverCamera.setWhiteBalanceAuto();
+      driverCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+      driverCamera.setPixelFormat(PixelFormat.kMJPEG);
       driverCamera.setFPS(120);
+      driverCamera.setResolution(320, 240);
 
       // -----Vision Camera-----
-      String[] args = new String[] { "/bin/bash", "-c", "v4l2-ctl -d 1 -c exposure_auto=1 -c exposure_absolute=10" };
-      Process proc = new ProcessBuilder(args).start();
-      proc.getOutputStream();
+      //String[] args = new String[] { "/bin/bash", "-c", "v4l2-ctl -d 1 -c exposure_auto=1 -c exposure_absolute=10" };
+      //Process proc = new ProcessBuilder(args).start();
+      //proc.getOutputStream();
       UsbCamera visionCamera = CameraServer.getInstance().startAutomaticCapture(RobotSettings.VISION_CAM_ID);
+      visionCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
       visionCamera.setResolution(RobotSettings.IMG_WIDTH, RobotSettings.IMG_HEIGHT);
       visionCamera.setWhiteBalanceManual(3600);
 

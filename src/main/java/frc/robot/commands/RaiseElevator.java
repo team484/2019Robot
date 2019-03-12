@@ -28,13 +28,13 @@ public class RaiseElevator extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ElevatorSub.set(0.5);
+    ElevatorSub.set(0.45);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return ElevatorSub.getHeight() > startHeight + 3;
+    return ElevatorSub.getHeight() > startHeight + 2;
   }
 
   // Called once after isFinished returns true
