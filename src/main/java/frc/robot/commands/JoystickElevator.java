@@ -69,7 +69,6 @@ public class JoystickElevator extends Command {
     lastRate = ElevatorSub.getRate();
     pid.setOutputRange(-0.3, 0.3);
   }
-
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
@@ -78,10 +77,10 @@ public class JoystickElevator extends Command {
     double operatorInput1 = RobotIO.hatchStick.getY();
     double operatorInput2 = RobotIO.cargoStick.getY();
     double operatorInput = Math.abs(operatorInput1) > Math.abs(operatorInput2) ? operatorInput1 : operatorInput2;
-    if (Math.abs(operatorInput) < 0.1) {
+    if (Math.abs(operatorInput) < 0.16) {
       operatorInput = 0;
     }
-    if (Math.abs(operatorInput) > 0.08) {
+    if (Math.abs(operatorInput) > 0.12) {
       commandState = 0;
       pid.disable();
     }
@@ -90,7 +89,7 @@ public class JoystickElevator extends Command {
     case 0:
       pid.disable();
       ElevatorSub.set(operatorInput, true);
-      if (Math.abs(operatorInput) < 0.08) {
+      if (Math.abs(operatorInput) < 0.11) {
         commandState = 1;
       }
       break;

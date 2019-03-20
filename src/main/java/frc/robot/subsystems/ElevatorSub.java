@@ -48,7 +48,7 @@ public class ElevatorSub extends Subsystem {
       RobotIO.elevatorMotorRight.set(0);
       return;
     }
-    double minRate = -height * RobotSettings.ELEVATOR_MAX_DECEL_RATE;
+    double minRate = -height * RobotSettings.ELEVATOR_MAX_DECEL_RATE - 0.05;
     SmartDashboard.putNumber("MIN RATE", minRate);
     double maxRate = (RobotSettings.ELEVATOR_UP_THRESHOLD - height) * RobotSettings.ELEVATOR_MAX_DECEL_RATE;
     SmartDashboard.putNumber("MAX RATE", maxRate);

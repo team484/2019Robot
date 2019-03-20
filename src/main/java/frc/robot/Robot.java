@@ -223,7 +223,7 @@ public class Robot extends TimedRobot {
     try {
       // -----Driver Camera-----
       UsbCamera driverCamera = CameraServer.getInstance().startAutomaticCapture(RobotSettings.DRIVER_CAM_ID);
-      driverCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+      //driverCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
       driverCamera.setPixelFormat(PixelFormat.kMJPEG);
       driverCamera.setFPS(120);
       driverCamera.setResolution(320, 240);
@@ -233,7 +233,7 @@ public class Robot extends TimedRobot {
       //Process proc = new ProcessBuilder(args).start();
       //proc.getOutputStream();
       UsbCamera visionCamera = CameraServer.getInstance().startAutomaticCapture(RobotSettings.VISION_CAM_ID);
-      visionCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+      //visionCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
       visionCamera.setResolution(RobotSettings.IMG_WIDTH, RobotSettings.IMG_HEIGHT);
       visionCamera.setWhiteBalanceManual(3600);
 

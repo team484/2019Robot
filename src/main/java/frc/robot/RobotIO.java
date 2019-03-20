@@ -154,8 +154,8 @@ public class RobotIO {
         /*-----Elevator-----*/
         elevatorMotorLeft = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_LEFT_ID, MotorType.kBrushless);
         elevatorMotorLeft.setSmartCurrentLimit(80);
-        elevatorMotorLeft.setOpenLoopRampRate(0.8);
-        elevatorMotorLeft.setClosedLoopRampRate(0.8);
+        elevatorMotorLeft.setOpenLoopRampRate(0.4);
+        elevatorMotorLeft.setClosedLoopRampRate(0.4);
         elevatorMotorLeft.enableVoltageCompensation(10);
         if (elevatorMotorLeft.setEncPosition(0) != CANError.kOK) {
             ErrorManager.add("Error with left elevator motor");
@@ -163,8 +163,8 @@ public class RobotIO {
 
         elevatorMotorRight = new CANSparkMax(RobotSettings.ELEVATOR_MOTOR_RIGHT_ID, MotorType.kBrushless);
         elevatorMotorRight.setSmartCurrentLimit(80);
-        elevatorMotorRight.setOpenLoopRampRate(0.8);
-        elevatorMotorRight.setClosedLoopRampRate(0.8);
+        elevatorMotorRight.setOpenLoopRampRate(0.4);
+        elevatorMotorRight.setClosedLoopRampRate(0.4);
         elevatorMotorRight.enableVoltageCompensation(10);
         elevatorMotorRight.getEncoder().setPosition(0);
         if (elevatorMotorRight.setEncPosition(0) != CANError.kOK) {
