@@ -26,10 +26,12 @@ public class PickupHatch extends CommandGroup {
     addSequential(new RaiseElevator(), 1);
     addSequential(new WaitCommand(0.2));
     addSequential(new WaitForChildren());
-    addSequential(new DriveUntilDistance(-0.8, -8));
-    addSequential(new WaitCommand(0.4));
+    addSequential(new WaitCommand(0.2));
+    addSequential(new DriveUntilDistance(-0.65, -8));
+    addSequential(new WaitCommand(0.6));
     addSequential(new GrabHatch());
-
+    addSequential(new WaitCommand(0.5));
+    addSequential(new RetractHatch());
   }
 
   @Override

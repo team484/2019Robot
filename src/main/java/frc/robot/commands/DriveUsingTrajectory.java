@@ -12,6 +12,7 @@ import java.io.File;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
+import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
 import frc.robot.subsystems.DriveSub;
 import frc.robot.subsystems.LEDSub;
@@ -43,6 +44,7 @@ public class DriveUsingTrajectory extends Command {
 	private EncoderFollower left;
 	private EncoderFollower right;
 	private final String name;
+	private boolean reverse = false;
 
 	/**
 	 * Create a new DriveUsingTrajectory command. This command will follow a
@@ -53,6 +55,20 @@ public class DriveUsingTrajectory extends Command {
 	public DriveUsingTrajectory(String name) {
 		requires(Robot.driveSub);
 		this.name = name;
+		reverse = false;
+	}
+
+	/**
+	 * Create a new DriveUsingTrajectory command. This command will follow a
+	 * trajectory of a given name.
+	 * 
+	 * @param name - Name of trajectory to follow.
+	 * @param reverse - true if robot should drive backwards.
+	 */
+	public DriveUsingTrajectory(String name, boolean reverse) {
+		requires(Robot.driveSub);
+		this.name = name;
+		this.reverse = reverse;
 	}
 
 	double startHeading;
@@ -89,20 +105,30 @@ public class DriveUsingTrajectory extends Command {
 		if (left == null || right == null) {
 			return;
 		}
-		double outputL = left.calculate((int) (1000 * DriveSub.getLeftDistance()));
-		double outputR = right.calculate((int) (1000 * DriveSub.getRightDistance()));
+		double outputL, outputR;
+		if (reverse) {
+			outputL = left.calculate((int) (-1000 * DriveSub.getRightDistance()));
+			outputR = right.calculate((int) (-1000 * DriveSub.getLeftDistance()));
+		} else {
+			outputL = left.calculate((int) (1000 * DriveSub.getLeftDistance()));
+			outputR = right.calculate((int) (1000 * DriveSub.getRightDistance()));
+		}
+
 		double actualHeading = -DriveSub.getHeading() + startHeading + 90.0;
 		double desiredHeading = Pathfinder.r2d(left.getHeading());
 
 		double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading - actualHeading);
 		double turn = 3.7 * (-1.0 / 80.0) * angleDifference;
 
-		DriveSub.tankDrive((outputL + turn), (outputR - turn));
+		DriveSub.tankDrive((outputR + turn), (outputL - turn));
 	}
 
 	// Command is finished when both trajectories have been completed
 	protected boolean isFinished() {
 		if (left == null || right == null) {
+			return true;
+		}
+		if (Math.abs(RobotIO.driverStick.getMagnitude()) > 0.5) {
 			return true;
 		}
 		return left.isFinished() && right.isFinished();

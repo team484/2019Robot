@@ -24,7 +24,10 @@ public class OI {
   private static Button tapLeft;
   private static Button tapRight;
   private static Button driverPickup;
-  private static Button testButton;
+  private static Button rightRocketBack;
+  private static Button rightRocketFront;
+  private static Button leftRocketBack;
+  private static Button leftRocketFront;
 
   /*-----Hatch Stick-----*/
   private static Button shootHatch;
@@ -58,7 +61,10 @@ public class OI {
     tapLeft = new JoystickButton(RobotIO.driverStick, 4);
     tapRight = new JoystickButton(RobotIO.driverStick, 5);
     driverPickup = new JoystickButton(RobotIO.driverStick, 8);
-    testButton = new JoystickButton(RobotIO.driverStick, 6);
+    rightRocketBack = new JoystickButton(RobotIO.driverStick, 11);
+    rightRocketFront = new JoystickButton(RobotIO.driverStick, 10);
+    leftRocketBack = new JoystickButton(RobotIO.driverStick, 6);
+    leftRocketFront = new JoystickButton(RobotIO.driverStick, 7);
     vision.whenPressed(new GoToTarget());
     vision.whenReleased(new EnableVision(false));
     vision.whenReleased(new JoystickDrive());
@@ -67,12 +73,15 @@ public class OI {
     tapLeft.whenPressed(new RotateAngle(-2));
     tapRight.whenPressed(new RotateAngle(2));
 
-    testButton.whenPressed(new DriveUsingTrajectory("L2CargoShipSideLeft"));
     driverPickup.whenPressed(new PickupCargo());
     driverPickup.whileHeld(new ElevateToHeight(0));
     driverPickup.whenReleased(new CargoForwardUntilClear());
     driverPickup.whenReleased(new IntakeDoNothing());
     driverPickup.whenReleased(new RaiseIntake());
+    rightRocketBack.whenPressed(new DriveUsingTrajectory("RightRocketBack"));
+    rightRocketFront.whenPressed(new RocketFront(false));
+    leftRocketBack.whenPressed(new DriveUsingTrajectory("LeftRocketBack"));
+    leftRocketFront.whenPressed(new RocketFront(true));
     /*-----Hatch Stick-----*/
     shootHatch = new JoystickButton(RobotIO.hatchStick, 1);
     pickupHatch = new JoystickButton(RobotIO.hatchStick, 2);

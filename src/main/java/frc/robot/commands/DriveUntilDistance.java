@@ -55,7 +55,7 @@ public class DriveUntilDistance extends Command {
     if (onlyForCargo && SetRocketOrCargo.atRocket) {
       return true;
     }
-    if (Math.abs(RobotIO.driverStick.getMagnitude()) > 0.2) {
+    if (Math.abs(RobotIO.driverStick.getMagnitude()) > 0.3) {
       return true;
     }
     return (DriveSub.getDistance() > distance && speed > 0) || (DriveSub.getDistance() < distance && speed < 0);

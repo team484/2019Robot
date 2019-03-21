@@ -104,7 +104,25 @@ public class Robot extends TimedRobot {
     GenerateTrajectory.execute("L2CargoShipSideRight",
       new Waypoint(322-119, 0.75, Pathfinder.d2r(90)),
       new Waypoint(322-80, 215, Pathfinder.d2r(90)),
-      new Waypoint(322-113, 283, Pathfinder.d2r(5)));
+      new Waypoint(322-113, 283, Pathfinder.d2r(175)));
+
+    GenerateTrajectory.execute("RightRocketBack",
+      new Waypoint(277.3, 19.5, Pathfinder.d2r(90)),
+      new Waypoint(250, 240, Pathfinder.d2r(90)),
+      new Waypoint(274, 300, Pathfinder.d2r(120)));
+
+    GenerateTrajectory.execute("LeftRocketBack",
+      new Waypoint(322.0-277.3, 19.5, Pathfinder.d2r(90)),
+      new Waypoint(322-250, 240, Pathfinder.d2r(90)),
+      new Waypoint(322-274, 300, Pathfinder.d2r(180-120)));
+
+    GenerateTrajectory.execute("RightRocketFront",
+      new Waypoint(277.3, 30, Pathfinder.d2r(90)),
+      new Waypoint(285, 180, Pathfinder.d2r(60)));
+
+    GenerateTrajectory.execute("LeftRocketFront",
+      new Waypoint(322.0-277.3, 30, Pathfinder.d2r(90)),
+      new Waypoint(322.0-285, 180, Pathfinder.d2r(180-60)));
       
   }
 
@@ -166,7 +184,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-    if (RobotIO.driverStick.getRawButton(11)) {
+    if (RobotIO.driverStick.getRawButton(9)) {
       matchStartTime = 0;
     }
   }

@@ -23,7 +23,7 @@ public class ShootHatch extends CommandGroup {
     addSequential(new DriveUntilDistance(-0.3, -0.2, true));
     addSequential(new LowerElevator());
     addSequential(new RetractHatch());
-    addSequential(new DriveUntilDistance(-0.3, -3));
+    addSequential(new DriveUntilDistance(-0.4, -3));
     addSequential(new GrabHatch());
   }
 
