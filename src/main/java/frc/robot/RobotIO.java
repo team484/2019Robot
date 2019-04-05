@@ -97,21 +97,21 @@ public class RobotIO {
 
         /*-----Drivetrain-----*/
         leftMotor1 = new CANSparkMax(RobotSettings.LEFT_MOTOR_1_ID, MotorType.kBrushless);
-        leftMotor1.setSmartCurrentLimit(150);
+        leftMotor1.setSmartCurrentLimit(80);
         leftMotor2 = new CANSparkMax(RobotSettings.LEFT_MOTOR_2_ID, MotorType.kBrushless);
-        leftMotor2.setSmartCurrentLimit(150);
+        leftMotor2.setSmartCurrentLimit(80);
 
         leftMotor3 = new CANSparkMax(RobotSettings.LEFT_MOTOR_3_ID, MotorType.kBrushless);
-        leftMotor3.setSmartCurrentLimit(150);
+        leftMotor3.setSmartCurrentLimit(80);
 
         rightMotor1 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_1_ID, MotorType.kBrushless);
-        rightMotor1.setSmartCurrentLimit(150);
+        rightMotor1.setSmartCurrentLimit(80);
 
         rightMotor2 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_2_ID, MotorType.kBrushless);
-        rightMotor2.setSmartCurrentLimit(150);
+        rightMotor2.setSmartCurrentLimit(80);
 
         rightMotor3 = new CANSparkMax(RobotSettings.RIGHT_MOTOR_3_ID, MotorType.kBrushless);
-        rightMotor3.setSmartCurrentLimit(150);
+        rightMotor3.setSmartCurrentLimit(80);
 
 
         if (leftMotor1.setEncPosition(0) != CANError.kOK) {

@@ -93,6 +93,8 @@ public class GenerateTrajectory {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		} else {
+			match = false;
 		}
 
 		if (match && !forceRegen) {

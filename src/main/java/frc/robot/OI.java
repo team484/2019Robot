@@ -78,9 +78,9 @@ public class OI {
     driverPickup.whenReleased(new CargoForwardUntilClear());
     driverPickup.whenReleased(new IntakeDoNothing());
     driverPickup.whenReleased(new RaiseIntake());
-    rightRocketBack.whenPressed(new DriveUsingTrajectory("RightRocketBack"));
+    rightRocketBack.whenPressed(new DriveUsingTrajectory("RightRocketBack", true));
     rightRocketFront.whenPressed(new RocketFront(false));
-    leftRocketBack.whenPressed(new DriveUsingTrajectory("LeftRocketBack"));
+    leftRocketBack.whenPressed(new DriveUsingTrajectory("LeftRocketBack", true));
     leftRocketFront.whenPressed(new RocketFront(true));
     /*-----Hatch Stick-----*/
     shootHatch = new JoystickButton(RobotIO.hatchStick, 1);

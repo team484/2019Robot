@@ -179,6 +179,13 @@ public class Robot extends TimedRobot {
     elevatorCmd.start();
     elevatorCmd.close();
     DriveSub.setVoltageCompensation(false);
+    RobotIO.leftMotor1.setSmartCurrentLimit(130);
+    RobotIO.leftMotor2.setSmartCurrentLimit(130);
+    RobotIO.leftMotor3.setSmartCurrentLimit(130);
+    RobotIO.rightMotor1.setSmartCurrentLimit(130);
+    RobotIO.rightMotor2.setSmartCurrentLimit(130);
+    RobotIO.rightMotor3.setSmartCurrentLimit(130);
+
   }
 
   @Override

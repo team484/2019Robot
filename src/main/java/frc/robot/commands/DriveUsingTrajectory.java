@@ -107,8 +107,8 @@ public class DriveUsingTrajectory extends Command {
 		}
 		double outputL, outputR;
 		if (reverse) {
-			outputL = left.calculate((int) (-1000 * DriveSub.getRightDistance()));
-			outputR = right.calculate((int) (-1000 * DriveSub.getLeftDistance()));
+			outputL = -left.calculate((int) (-1000 * DriveSub.getRightDistance()));
+			outputR = -right.calculate((int) (-1000 * DriveSub.getLeftDistance()));
 		} else {
 			outputL = left.calculate((int) (1000 * DriveSub.getLeftDistance()));
 			outputR = right.calculate((int) (1000 * DriveSub.getRightDistance()));
@@ -119,8 +119,11 @@ public class DriveUsingTrajectory extends Command {
 
 		double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading - actualHeading);
 		double turn = 3.7 * (-1.0 / 80.0) * angleDifference;
-
-		DriveSub.tankDrive((outputR + turn), (outputL - turn));
+		if (reverse) {
+			DriveSub.tankDrive((outputR + turn), (outputL - turn));
+		} else {
+			DriveSub.tankDrive((outputL + turn), (outputR - turn));
+		}
 	}
 
 	// Command is finished when both trajectories have been completed

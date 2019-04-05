@@ -134,7 +134,7 @@ public class RobotSettings {
     public static final double ELEVATOR_MAX_DECEL_RATE = 2.8; // 1/seconds
     public static final boolean ELEVATOR_SWITCH_DOWN_STATE = false;
 
-    public static final double ELEVATOR_HATCH_PICKUP = 5.0;
+    public static final double ELEVATOR_HATCH_PICKUP = 6;
     public static final double ELEVATOR_HATCH_PICKUP_RAISED = 11;
     public static final double ELEVATOR_HATCH_LEVEL_1 = 9;
     public static final double ELEVATOR_HATCH_LEVEL_2 = 35.5;
@@ -147,7 +147,7 @@ public class RobotSettings {
 
     /*-----Intake Vars-----*/
     public static final double INTAKE_MOTOR_SPEED = 1.0;
-    public static final double INTAKE_SENSOR_VOLTAGE = 0.5;
+    public static final double INTAKE_SENSOR_VOLTAGE = 0.8;
 
     /*-----Vision Vars-----*/
     public static final int DRIVER_CAM_ID = 0;
