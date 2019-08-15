@@ -18,21 +18,15 @@ public class PickupHatch extends CommandGroup {
    * Add your docs here.
    */
   public PickupHatch() {
-    addSequential(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_PICKUP));
-    addSequential(new DriveUntilDistanceCollisionStop(0.3, 10), 0.5); //make sure we are against ship
     addSequential(new ReleaseHatch());
+    addSequential(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_PICKUP));
+    addSequential(new DriveUntilDistanceCollisionStop(0.3, 10), 1.0); //make sure we are against ship
     addSequential(new ExtendHatch());
-    addSequential(new DriveUntilDistance(-0.4, -2), 0.7);
-    addSequential(new RaiseElevator(), 1);
-    addSequential(new WaitCommand(0.2));
-    addSequential(new WaitForChildren());
-    addSequential(new WaitCommand(0.2));
-    addSequential(new DriveUntilDistance(-0.65, -8));
-    addSequential(new WaitCommand(0.6));
-    addSequential(new WaitCommand(0.5));
-    addSequential(new RetractHatch());
-    addSequential(new WaitCommand(0.5));
+    addSequential(new WaitCommand(0.1));
     addSequential(new GrabHatch());
+    addSequential(new WaitCommand(0.1));
+    addSequential(new RetractHatch());
+
   }
 
   @Override

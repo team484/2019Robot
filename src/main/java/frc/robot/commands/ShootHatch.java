@@ -16,14 +16,13 @@ public class ShootHatch extends CommandGroup {
    * Add your docs here.
    */
   public ShootHatch() {
+    addSequential(new GrabHatch());
     addParallel(new DriveUntilDistance(0.4, 10),0.5);
-    addSequential(new ReleaseHatch());
     addSequential(new ExtendHatch(true));
+    addSequential(new ReleaseHatch());
     addSequential(new WaitCommand(0.3));
-    addSequential(new DriveUntilDistance(-0.3, -0.2, true));
-    addSequential(new LowerElevator());
     addSequential(new RetractHatch());
-    addSequential(new DriveUntilDistance(-0.4, -3));
+    addSequential(new WaitCommand(0.3));
     addSequential(new GrabHatch());
   }
 

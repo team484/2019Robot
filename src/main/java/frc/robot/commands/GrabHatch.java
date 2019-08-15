@@ -18,7 +18,7 @@ public class GrabHatch extends InstantCommand {
 
   @Override
   protected void execute() {
-    HatchSub.setBottom(Value.kReverse);
+    HatchSub.setBottom(Value.kForward);
   }
 
 }

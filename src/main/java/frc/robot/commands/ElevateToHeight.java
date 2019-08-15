@@ -72,7 +72,7 @@ public class ElevateToHeight extends Command {
   }
 
   protected boolean isFinished() {
-    return Math.abs(ElevatorSub.getHeight() - setpoint) < 1.5 && ElevatorSub.getRate() < 1.5;
+    return Math.abs(ElevatorSub.getHeight() - setpoint) < 1.0 && ElevatorSub.getRate() < 1.0;
   }
 
   protected void end() {

@@ -178,7 +178,7 @@ public class RobotIO {
         bottomHatchSolenoid = new DoubleSolenoid(RobotSettings.BOTTOM_SOLENOID_PORT_1,
                 RobotSettings.BOTTOM_SOLENOID_PORT_2);
         topHatchSolenoid.set(Value.kReverse);
-        bottomHatchSolenoid.set(Value.kReverse);
+        bottomHatchSolenoid.set(Value.kForward);
         /*-----Intake-----*/
         intakeMotor = new WPI_TalonSRX(RobotSettings.CARGO_MOTOR_ID);
         intakeMotor.configVoltageCompSaturation(12);

@@ -130,17 +130,17 @@ public class RobotSettings {
     public static final double ELEVATOR_DOWN_KP = 0.06;
     public static final double ELEVATOR_DOWN_KI = 0;
     public static final double ELEVATOR_DOWN_KD =0.5;
-    public static final double ELEVATOR_GRAVITY_COMP = 0.0;
-    public static final double ELEVATOR_MAX_DECEL_RATE = 2.8; // 1/seconds
+    public static final double ELEVATOR_GRAVITY_COMP = 0.02;
+    public static final double ELEVATOR_MAX_DECEL_RATE = 4.0; // 1/seconds
     public static final boolean ELEVATOR_SWITCH_DOWN_STATE = false;
 
-    public static final double ELEVATOR_HATCH_PICKUP = 6;
+    public static final double ELEVATOR_HATCH_PICKUP = 5;
     public static final double ELEVATOR_HATCH_PICKUP_RAISED = 11;
     public static final double ELEVATOR_HATCH_LEVEL_1 = 9;
     public static final double ELEVATOR_HATCH_LEVEL_2 = 35.5;
     public static final double ELEVATOR_HATCH_LEVEL_3 = 64;
 
-    public static final double ELEVATOR_CARGO_SHIP = 20;
+    public static final double ELEVATOR_CARGO_SHIP = 5;
     public static final double ELEVATOR_CARGO_OFFSET = -2;
 
     /*-----Hatch Vars-----*/

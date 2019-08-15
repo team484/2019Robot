@@ -27,7 +27,7 @@ public class ReleaseHatch extends InstantCommand {
   @Override
   protected void execute() {
     if (!checkForRocket || SetRocketOrCargo.atRocket) {
-      HatchSub.setBottom(Value.kForward);
+      HatchSub.setBottom(Value.kReverse);
     }
   }
 
