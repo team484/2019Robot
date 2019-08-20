@@ -19,10 +19,11 @@ public class ShootHatch extends CommandGroup {
     addSequential(new GrabHatch());
     addParallel(new DriveUntilDistance(0.4, 10),0.5);
     addSequential(new ExtendHatch(true));
+    addSequential(new WaitCommand(0.4));
     addSequential(new ReleaseHatch());
-    addSequential(new WaitCommand(0.3));
+    addSequential(new WaitCommand(0.5));
     addSequential(new RetractHatch());
-    addSequential(new WaitCommand(0.3));
+    addSequential(new WaitCommand(0.5));
     addSequential(new GrabHatch());
   }
 

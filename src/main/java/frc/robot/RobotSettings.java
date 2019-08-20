@@ -134,7 +134,7 @@ public class RobotSettings {
     public static final double ELEVATOR_MAX_DECEL_RATE = 4.0; // 1/seconds
     public static final boolean ELEVATOR_SWITCH_DOWN_STATE = false;
 
-    public static final double ELEVATOR_HATCH_PICKUP = 5;
+    public static final double ELEVATOR_HATCH_PICKUP = 6;
     public static final double ELEVATOR_HATCH_PICKUP_RAISED = 11;
     public static final double ELEVATOR_HATCH_LEVEL_1 = 9;
     public static final double ELEVATOR_HATCH_LEVEL_2 = 35.5;

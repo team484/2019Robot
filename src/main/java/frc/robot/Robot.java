@@ -257,13 +257,13 @@ public class Robot extends TimedRobot {
       //String[] args = new String[] { "/bin/bash", "-c", "v4l2-ctl -d 1 -c exposure_auto=1 -c exposure_absolute=10" };
       //Process proc = new ProcessBuilder(args).start();
       //proc.getOutputStream();
-      UsbCamera visionCamera = CameraServer.getInstance().startAutomaticCapture(RobotSettings.VISION_CAM_ID);
+        //UsbCamera visionCamera = CameraServer.getInstance().startAutomaticCapture(RobotSettings.VISION_CAM_ID);
       //visionCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
-      visionCamera.setResolution(RobotSettings.IMG_WIDTH, RobotSettings.IMG_HEIGHT);
-      visionCamera.setWhiteBalanceManual(3600);
+        //visionCamera.setResolution(RobotSettings.IMG_WIDTH, RobotSettings.IMG_HEIGHT);
+        //visionCamera.setWhiteBalanceManual(3600);
 
       // -----Computer Vision Thread-----
-      visionThread = new VisionThread(visionCamera, new TargetVisionPipeline(), pipeline -> {
+      /*visionThread = new VisionThread(visionCamera, new TargetVisionPipeline(), pipeline -> {
         if (Robot.disableVision || (pipeline.filterContoursOutput().isEmpty())) {
           targetFound = false;
           targetDistance = 0;
@@ -415,7 +415,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("angleDeg", angleXDeg);
         SmartDashboard.putBoolean("Target", targetFound);
       });
-      visionThread.start();
+      visionThread.start();*/
       isCameraServerUp = true;
     } catch (Exception e) {
       ErrorManager.add("Vision Error " + e.getMessage());
