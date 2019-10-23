@@ -19,7 +19,7 @@ public class GoToTarget extends CommandGroup {
    */
   public GoToTarget() {
     //addSequential(new EnableVision(true));
-    addSequential(new ElevateToHeight(0));
+    addSequential(new ElevateToHeight(1));
     addSequential(new WaitForVision());
     //addSequential(new RotateToTarget());
     //addSequential(new WaitCommand(0.2));

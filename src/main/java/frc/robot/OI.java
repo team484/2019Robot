@@ -58,8 +58,8 @@ public class OI {
     vision = new JoystickButton(RobotIO.driverStick, 1);
     toggleBack = new JoystickButton(RobotIO.driverStick, 2);
     toggleFront = new JoystickButton(RobotIO.driverStick, 3);
-    tapLeft = new JoystickButton(RobotIO.driverStick, 4);
-    tapRight = new JoystickButton(RobotIO.driverStick, 5);
+    //tapLeft = new JoystickButton(RobotIO.driverStick, 4);
+    //tapRight = new JoystickButton(RobotIO.driverStick, 5);
     driverPickup = new JoystickButton(RobotIO.driverStick, 8);
     rightRocketBack = new JoystickButton(RobotIO.driverStick, 11);
     rightRocketFront = new JoystickButton(RobotIO.driverStick, 10);
@@ -68,20 +68,21 @@ public class OI {
     vision.whenPressed(new GoToTarget());
     vision.whenReleased(new EnableVision(false));
     vision.whenReleased(new JoystickDrive());
+    vision.whenReleased(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_PICKUP));
     toggleBack.whenPressed(new ClimberBackToggle());
     toggleFront.whenPressed(new ClimberFrontToggle());
-    tapLeft.whenPressed(new RotateAngle(-2));
-    tapRight.whenPressed(new RotateAngle(2));
+    //tapLeft.whenPressed(new RotateAngle(-2));
+   // tapRight.whenPressed(new RotateAngle(2));
 
     driverPickup.whenPressed(new PickupCargo());
     driverPickup.whileHeld(new ElevateToHeight(0));
     driverPickup.whenReleased(new CargoForwardUntilClear());
     driverPickup.whenReleased(new IntakeDoNothing());
     driverPickup.whenReleased(new RaiseIntake());
-    rightRocketBack.whenPressed(new DriveUsingTrajectory("RightRocketBack", true));
-    rightRocketFront.whenPressed(new RocketFront(false));
-    leftRocketBack.whenPressed(new DriveUsingTrajectory("LeftRocketBack", true));
-    leftRocketFront.whenPressed(new RocketFront(true));
+    //rightRocketBack.whenPressed(new DriveUsingTrajectory("RightRocketBack", true));
+    //rightRocketFront.whenPressed(new RocketFront(false));
+    //leftRocketBack.whenPressed(new DriveUsingTrajectory("LeftRocketBack", true));
+    //leftRocketFront.whenPressed(new RocketFront(true));
     /*-----Hatch Stick-----*/
     shootHatch = new JoystickButton(RobotIO.hatchStick, 1);
     pickupHatch = new JoystickButton(RobotIO.hatchStick, 2);

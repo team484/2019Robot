@@ -129,10 +129,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     SmartDashboard.putNumber("Elevator Height", ElevatorSub.getHeight());
-    double[] ypr = new double[3];
-    SmartDashboard.putNumber("Gyro", ypr[0]);
-    SmartDashboard.putNumber("Pitch", ypr[1]);
-    SmartDashboard.putNumber("Roll", ypr[2]);
 
     updateChooser();
   }
@@ -247,23 +243,23 @@ public class Robot extends TimedRobot {
       return;
     try {
       // -----Driver Camera-----
-      UsbCamera driverCamera = CameraServer.getInstance().startAutomaticCapture(RobotSettings.DRIVER_CAM_ID);
+      /*UsbCamera driverCamera = CameraServer.getInstance().startAutomaticCapture(RobotSettings.DRIVER_CAM_ID);
       //driverCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
       driverCamera.setPixelFormat(PixelFormat.kMJPEG);
       driverCamera.setFPS(120);
-      driverCamera.setResolution(320, 240);
+      driverCamera.setResolution(320, 240);*/
 
       // -----Vision Camera-----
       //String[] args = new String[] { "/bin/bash", "-c", "v4l2-ctl -d 1 -c exposure_auto=1 -c exposure_absolute=10" };
       //Process proc = new ProcessBuilder(args).start();
       //proc.getOutputStream();
-        //UsbCamera visionCamera = CameraServer.getInstance().startAutomaticCapture(RobotSettings.VISION_CAM_ID);
-      //visionCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
-        //visionCamera.setResolution(RobotSettings.IMG_WIDTH, RobotSettings.IMG_HEIGHT);
-        //visionCamera.setWhiteBalanceManual(3600);
+        UsbCamera visionCamera = CameraServer.getInstance().startAutomaticCapture(RobotSettings.VISION_CAM_ID);
+      visionCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+        visionCamera.setResolution(RobotSettings.IMG_WIDTH, RobotSettings.IMG_HEIGHT);
+        visionCamera.setWhiteBalanceManual(3600);
 
       // -----Computer Vision Thread-----
-      /*visionThread = new VisionThread(visionCamera, new TargetVisionPipeline(), pipeline -> {
+      visionThread = new VisionThread(visionCamera, new TargetVisionPipeline(), pipeline -> {
         if (Robot.disableVision || (pipeline.filterContoursOutput().isEmpty())) {
           targetFound = false;
           targetDistance = 0;
@@ -415,7 +411,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("angleDeg", angleXDeg);
         SmartDashboard.putBoolean("Target", targetFound);
       });
-      visionThread.start();*/
+      visionThread.start();
       isCameraServerUp = true;
     } catch (Exception e) {
       ErrorManager.add("Vision Error " + e.getMessage());

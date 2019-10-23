@@ -28,7 +28,6 @@ public class RobotSettings {
 
     /*-----Analog Ports-----*/
     public static final int CARGO_SHOOTER_SENSOR_PORT = 0;
-    public static final int CARGO_INTAKE_SENSOR_PORT = 1;
 
     /*-----Digital Ports-----*/
     public static final int LEFT_ENCODER_A_PORT = 0;
@@ -36,6 +35,8 @@ public class RobotSettings {
     public static final int RIGHT_ENCODER_A_PORT = 2;
     public static final int RIGHT_ENCODER_B_PORT = 3;
     public static final int ELEVATOR_DOWN_SWITCH_PORT = 4;
+    public static final int CARGO_INTAKE_SENSOR_PORT = 7;
+
 
     /*-----PWM Ports-----*/
     public static final int LED_R_PORT = 0;
@@ -134,7 +135,7 @@ public class RobotSettings {
     public static final double ELEVATOR_MAX_DECEL_RATE = 4.0; // 1/seconds
     public static final boolean ELEVATOR_SWITCH_DOWN_STATE = false;
 
-    public static final double ELEVATOR_HATCH_PICKUP = 6;
+    public static final double ELEVATOR_HATCH_PICKUP = 5.5;
     public static final double ELEVATOR_HATCH_PICKUP_RAISED = 11;
     public static final double ELEVATOR_HATCH_LEVEL_1 = 9;
     public static final double ELEVATOR_HATCH_LEVEL_2 = 35.5;
@@ -151,6 +152,6 @@ public class RobotSettings {
 
     /*-----Vision Vars-----*/
     public static final int DRIVER_CAM_ID = 0;
-    public static final int VISION_CAM_ID = 1;
+    public static final int VISION_CAM_ID = 0;
     public static final double RADIANS_PER_PIXEL = 0.001955;
 }

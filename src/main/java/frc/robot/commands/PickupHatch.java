@@ -19,12 +19,14 @@ public class PickupHatch extends CommandGroup {
    */
   public PickupHatch() {
     addSequential(new ReleaseHatch());
+    addSequential(new WaitCommand(0.2));
     addSequential(new ElevateToHeight(RobotSettings.ELEVATOR_HATCH_PICKUP));
     addSequential(new DriveUntilDistanceCollisionStop(0.3, 10), 1.0); //make sure we are against ship
+    addSequential(new WaitCommand(0.2));
     addSequential(new ExtendHatch());
-    addSequential(new WaitCommand(0.1));
+    addSequential(new WaitCommand(0.3));
     addSequential(new GrabHatch());
-    addSequential(new WaitCommand(0.1));
+    addSequential(new WaitCommand(0.3));
     addSequential(new RetractHatch());
 
   }

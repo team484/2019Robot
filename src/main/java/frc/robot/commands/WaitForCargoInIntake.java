@@ -23,7 +23,7 @@ public class WaitForCargoInIntake extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return (RobotIO.intakeSensor.getAverageVoltage() > RobotSettings.INTAKE_SENSOR_VOLTAGE);
+    return (RobotIO.intakeSensor.get());
   }
   @Override
   protected void end() {

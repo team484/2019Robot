@@ -64,7 +64,7 @@ public class RobotIO {
     /*-----Intake-----*/
     public static WPI_TalonSRX intakeMotor;
     public static DoubleSolenoid intakeSolenoid;
-    public static AnalogInput intakeSensor;
+    public static DigitalInput intakeSensor;
 
     /*-----LEDs-----*/
     public static PWM led_r;
@@ -184,7 +184,7 @@ public class RobotIO {
         intakeMotor.configVoltageCompSaturation(12);
         intakeMotor.enableVoltageCompensation(true);
         intakeSolenoid = new DoubleSolenoid(1, RobotSettings.ARM_SOLENOID_PORT_1, RobotSettings.ARM_SOLENOID_PORT_2);
-        intakeSensor = new AnalogInput(RobotSettings.CARGO_INTAKE_SENSOR_PORT);
+        intakeSensor = new DigitalInput(RobotSettings.CARGO_INTAKE_SENSOR_PORT);
         intakeSolenoid.set(Value.kForward);
 
         /*-----LEDs-----*/

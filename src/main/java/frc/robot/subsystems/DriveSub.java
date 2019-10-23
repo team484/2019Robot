@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.ErrorCode;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.ErrorManager;
 import frc.robot.RobotIO;
 import frc.robot.RobotSettings;
@@ -111,18 +112,26 @@ public class DriveSub extends Subsystem {
     lastRd1 = d1;
     return d1;
   }
-
+  private static long lastHeadingTime = 0;
+  private static double lastHeading = 0;
   /**
    * Gets the current heading (yaw) of the gyro.
    * 
    * @return - yaw in degrees
    */
   public static double getHeading() {
+    long newTime = System.currentTimeMillis();
+    if (DriveSub.lastHeadingTime + 50 > newTime) {
+      return DriveSub.lastHeading;
+    }
+    DriveSub.lastHeadingTime = newTime;
     double[] ypr = new double[3];
     ErrorCode err = RobotIO.imu.getYawPitchRoll(ypr);
     if (err.value != 0) {
       ErrorManager.add("IMU Error - " + err.name());
     }
+    DriveSub.lastHeading = ypr[0];
+    SmartDashboard.putNumber("yaw", ypr[0]);
     return ypr[0];
   }
   

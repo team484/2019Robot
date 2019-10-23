@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
  * Set if the robot is currently at a rocket ship or cargo ship
  */
 public class SetRocketOrCargo extends InstantCommand {
-  public static boolean atRocket = false;
+  public static boolean atRocket = true;
   private boolean valueToSet;
   public SetRocketOrCargo(boolean atRocket) {
     valueToSet = atRocket;

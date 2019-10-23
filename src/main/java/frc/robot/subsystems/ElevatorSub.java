@@ -37,7 +37,7 @@ public class ElevatorSub extends Subsystem {
       RobotIO.imu.getYawPitchRoll(ypr);
       if (Math.abs(ypr[1]) > 20.0 || Math.abs(ypr[2]) > 20.0) {
         managed = true;
-        speed = -1.0;
+        //speed = -1.0;
         ErrorManager.add("Robot Tip Detected");
       }
     }
